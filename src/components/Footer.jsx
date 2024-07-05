@@ -5,7 +5,7 @@ import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 const Footer = () => {
   return (
     <footer
-      className="py-5"
+      className="mt-5 py-5 "
       style={{ color: "white", backgroundColor: "#1f2562" }}
     >
       <Container fluid>

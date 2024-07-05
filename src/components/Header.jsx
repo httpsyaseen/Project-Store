@@ -15,7 +15,7 @@ function NavigationBar() {
   return (
     <Navbar expand="md" bg="light" variant="light" className="shadow">
       <Container fluid>
-        <Navbar.Brand href="#">
+        <Navbar.Brand href="/">
           <img
             src="https://tinopia.com/wp-content/uploads/2023/12/180-by-60-01.png"
             alt="Logo"
@@ -25,7 +25,7 @@ function NavigationBar() {
         <Navbar.Collapse id="navbarNav">
           <Nav className="me-auto">
             <Nav.Link href="#">Home</Nav.Link>
-            <Nav.Link href="#">Products</Nav.Link>
+            <Nav.Link href="/products">Products</Nav.Link>
             <Nav.Link href="#">About</Nav.Link>
             <Nav.Link href="#">Contact</Nav.Link>
             <NavDropdown
@@ -33,11 +33,13 @@ function NavigationBar() {
               id="navbarDropdown"
               className="d-md-none"
             >
-              <NavDropdown.Item href="#">Greeting Cards</NavDropdown.Item>
-              <NavDropdown.Item href="#">Home Decors</NavDropdown.Item>
-              <NavDropdown.Item href="#">Eidi Cards</NavDropdown.Item>
-              <NavDropdown.Item href="#">Stickers</NavDropdown.Item>
-              <NavDropdown.Item href="#">Envelop</NavDropdown.Item>
+              <NavDropdown.Item href="/products">
+                Greeting Cards
+              </NavDropdown.Item>
+              <NavDropdown.Item href="/products">Home Decors</NavDropdown.Item>
+              <NavDropdown.Item href="/products">Eidi Cards</NavDropdown.Item>
+              <NavDropdown.Item href="/products">Stickers</NavDropdown.Item>
+              <NavDropdown.Item href="/products">Envelop</NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Nav className="ms-auto">
@@ -70,31 +72,31 @@ function Categories() {
       <Row>
         <Col className="d-flex justify-content-center">
           <a
-            href=""
+            href="/products"
             className="category-item p-4 text-decoration-none m-2 fw-medium"
           >
             Greeting Cards
           </a>
           <a
-            href=""
+            href="/products"
             className="category-item p-4 text-decoration-none m-2 fw-medium"
           >
             Home Decors
           </a>
           <a
-            href=""
+            href="/products"
             className="category-item p-4 text-decoration-none m-2 fw-medium"
           >
             Eidi Cards
           </a>
           <a
-            href=""
+            href="/products"
             className="category-item p-4 text-decoration-none m-2 fw-medium"
           >
             Stickers
           </a>
           <a
-            href=""
+            href="/products"
             className="category-item p-4 text-decoration-none m-2 fw-medium"
           >
             Envelop
