@@ -1,6 +1,7 @@
 import { Col, Button } from "react-bootstrap";
 import productImage from "../assets/product.webp";
 import { useNavigate } from "react-router-dom";
+import Style from "./styles/Product.module.css";
 
 const Product = ({ image }) => {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ const Product = ({ image }) => {
   return (
     <>
       <Col md={3} className="d-flex justify-content-center">
-        <div className="product-card">
+        <div className={Style.productCard}>
           <img
             src={image}
             alt="No Image"

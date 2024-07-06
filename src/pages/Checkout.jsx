@@ -18,26 +18,12 @@ const Checkout = () => {
       <h1 className="mb-4">Checkout</h1>
       <Row>
         <Col md={7}>
-          <h4>Contact details</h4>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <span>Already have an account?</span>
-            <Button variant="link">Sign in</Button>
-          </div>
           <Form>
-            <Form.Group controlId="email">
-              <Form.Label>Email*</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" />
-            </Form.Group>
-            <Form.Group controlId="createAccount">
-              <Form.Check type="checkbox" label="I want to create account" />
-            </Form.Group>
-
             <h4 className="mt-4">Shipping address</h4>
             <Form.Group controlId="country">
               <Form.Label>Country</Form.Label>
               <Form.Control as="select">
                 <option>United States</option>
-                {/* Add more countries here */}
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="firstName">
@@ -47,10 +33,6 @@ const Checkout = () => {
             <Form.Group controlId="lastName">
               <Form.Label>Last name*</Form.Label>
               <Form.Control type="text" placeholder="Enter last name" />
-            </Form.Group>
-            <Form.Group controlId="company">
-              <Form.Label>Company</Form.Label>
-              <Form.Control type="text" placeholder="Enter company name" />
             </Form.Group>
             <Form.Group controlId="streetAddress">
               <Form.Label>Street address*</Form.Label>
@@ -66,10 +48,6 @@ const Checkout = () => {
             <Form.Group controlId="city">
               <Form.Label>City*</Form.Label>
               <Form.Control type="text" placeholder="Enter city" />
-            </Form.Group>
-            <Form.Group controlId="zipCode">
-              <Form.Label>Zip code*</Form.Label>
-              <Form.Control type="text" placeholder="Enter zip code" />
             </Form.Group>
           </Form>
         </Col>
