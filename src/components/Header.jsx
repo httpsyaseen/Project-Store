@@ -47,10 +47,21 @@ function NavigationBar() {
               <FaShoppingCart size={"1.8rem"} className="pe-2" />
               Cart
             </Nav.Link>
-            <Nav.Link href="#" className="nav-link nav-item mr-3">
-              <FaUser size={"1.5rem"} className="pe-2" />
-              Account
-            </Nav.Link>
+
+            <NavDropdown
+              title={
+                <span>
+                  <FaUser size={"1.5rem"} className="pe-2" />
+                  Account
+                </span>
+              }
+              id="accountDropdown"
+              className="d-md-block"
+            >
+              <NavDropdown.Item href="#">Profile</NavDropdown.Item>
+              <NavDropdown.Item href="#">Settings</NavDropdown.Item>
+              <NavDropdown.Item href="#">Logout</NavDropdown.Item>
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Container>

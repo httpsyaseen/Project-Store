@@ -1,76 +1,85 @@
-import React, { useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  Card,
-  InputGroup,
-} from "react-bootstrap";
+import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import productImage from "../assets/product.webp";
+import { TextField } from "@mui/material";
 
 const Checkout = () => {
-  const [quantity, setQuantity] = useState(15);
-
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 defualt-height">
       <h1 className="mb-4">Checkout</h1>
       <Row>
         <Col md={7}>
-          <Form>
-            <h4 className="mt-4">Shipping address</h4>
-            <Form.Group controlId="country">
-              <Form.Label>Country</Form.Label>
-              <Form.Control as="select">
-                <option>United States</option>
-              </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="firstName">
-              <Form.Label>First name*</Form.Label>
-              <Form.Control type="text" placeholder="Enter first name" />
-            </Form.Group>
-            <Form.Group controlId="lastName">
-              <Form.Label>Last name*</Form.Label>
-              <Form.Control type="text" placeholder="Enter last name" />
-            </Form.Group>
-            <Form.Group controlId="streetAddress">
-              <Form.Label>Street address*</Form.Label>
-              <Form.Control type="text" placeholder="Enter street address" />
-            </Form.Group>
-            <Form.Group controlId="streetAddressContinue">
-              <Form.Label>Street address (continue)</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Apartment, suite, unit, etc. (optional)"
-              />
-            </Form.Group>
-            <Form.Group controlId="city">
-              <Form.Label>City*</Form.Label>
-              <Form.Control type="text" placeholder="Enter city" />
-            </Form.Group>
-          </Form>
+          <form className="d-flex justify-content-center flex-column gap-3">
+            <TextField
+              id="outlined-basic"
+              label="Name"
+              variant="outlined"
+              autoFocus={true}
+            />
+            <TextField id="outlined-basic" label="Email" variant="outlined" />
+            <TextField
+              id="outlined-basic"
+              label="Shipping Address"
+              variant="outlined"
+            />
+            <TextField id="outlined-basic" label="City" variant="outlined" />
+          </form>
         </Col>
-        <Col md={5}>
+        <Col
+          md={5}
+          className="d-flex justify-content-center flex-column mt-5 mt-md-0"
+        >
           <Card>
             <Card.Header>
               <h4 className="mb-0">Summary</h4>
             </Card.Header>
             <Card.Body>
-              <div className="d-flex mb-3 gap-3">
+              <div className="d-flex mb-3 gap-4 justify-content-around">
                 <img
                   src={productImage}
                   alt="Saleor Balance 420 Shoes"
-                  width="100"
+                  width="50px"
                   className="mr-3"
+                  style={{ objectFit: "contain" }}
                 />
-                <div>
-                  <h5 className="align-self-center">
-                    Saleor Balance 420 Shoes
-                  </h5>
+                <div className="align-self-center">
+                  <p className="h5">Anime Adhensive Stickers</p>
+                </div>
+                <div className="align-self-center">
+                  <h6>Rs 10/-</h6>
                 </div>
               </div>
-
+              <hr />
+              <div className="d-flex mb-3 gap-4 justify-content-around">
+                <img
+                  src={productImage}
+                  alt="Saleor Balance 420 Shoes"
+                  width="50px"
+                  className="mr-3"
+                  style={{ objectFit: "contain" }}
+                />
+                <div className="align-self-center">
+                  <h5>Anime Adhensive Stickers</h5>
+                </div>
+                <div className="align-self-center">
+                  <h6>Rs 10/-</h6>
+                </div>
+              </div>
+              <hr />
+              <div className="d-flex mb-3 gap-4 justify-content-around">
+                <img
+                  src={productImage}
+                  alt="Saleor Balance 420 Shoes"
+                  width="50px"
+                  style={{ objectFit: "contain" }}
+                  className="mr-3"
+                />
+                <div className="align-self-center">
+                  <h5>Anime Adhensive Stickers</h5>
+                </div>
+                <div className="align-self-center">
+                  <h6>Rs 10/-</h6>
+                </div>
+              </div>
               <hr />
               <div className="d-flex justify-content-between">
                 <span>Subtotal</span>
@@ -86,6 +95,7 @@ const Checkout = () => {
                 <strong>$750.00</strong>
               </div>
             </Card.Body>
+            <Button className="add-to-cart">Place Order</Button>
           </Card>
         </Col>
       </Row>

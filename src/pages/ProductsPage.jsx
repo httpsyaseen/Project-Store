@@ -1,7 +1,28 @@
 import { Container, Row, Col, Dropdown } from "react-bootstrap";
 import Product from "../components/Product";
+import { Pagination } from "@mui/material";
+import { useEffect, useState } from "react";
 
 const ProductsPage = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/products");
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data = await response.json();
+        setProducts(data.products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <>
       <Container className="mt-5 defualt-height">
@@ -22,12 +43,14 @@ const ProductsPage = () => {
           </Col>
         </Row>
         <Row className="my-5">
-          {new Array(20).fill(null).map((_, i) => (
-            <Product
-              key={i}
-              image={`https://picsum.photos/id/${i + 210}/300`}
-            />
+          {products.map((product, i) => (
+            <Product key={i} product={product} />
           ))}
+        </Row>
+        <Row className="justify-content-center">
+          <Col xs="auto">
+            <Pagination count={10} color="primary" size="large" />
+          </Col>
         </Row>
       </Container>
     </>

@@ -9,9 +9,11 @@ import {
   Form,
   InputGroup,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
   const price = 78;
   const subtotal = price * quantity;
 
@@ -147,7 +149,11 @@ const Cart = () => {
                 </tr>
               </tbody>
             </Table>
-            <Button variant="primary add-to-cart" block>
+            <Button
+              variant="primary add-to-cart"
+              block
+              onClick={() => navigate("/checkout")}
+            >
               Proceed to checkout
             </Button>
           </div>
