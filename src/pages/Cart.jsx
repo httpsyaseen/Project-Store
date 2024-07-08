@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import productImage from "../assets/product.webp";
+import React from "react";
 import {
   Container,
   Row,
@@ -10,15 +9,24 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { cartActions } from "../features/cartSlice";
 
 const Cart = () => {
-  const [quantity, setQuantity] = useState(1);
+  const { items, totalAmount } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const price = 78;
-  const subtotal = price * quantity;
+
+  const handleIncrement = (item) => {
+    dispatch(cartActions.addItemToCart(item));
+  };
+
+  const handleDecrement = (id) => {
+    dispatch(cartActions.removeItemFromCart(id));
+  };
 
   return (
-    <Container className="mt-5  defualt-height">
+    <Container className="mt-5 defualt-height">
       <h1>Cart</h1>
       <Row>
         <Col lg={8}>
@@ -32,80 +40,47 @@ const Cart = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  <div className="d-flex align-items-center flex-column flex-md-row">
-                    <img
-                      src={productImage}
-                      alt="Anime panic Sticker"
-                      width="50"
-                      className="me-2"
-                    />
-                    <span>Anime panic Sticker</span>
-                  </div>
-                </td>
-                <td>Rs {price}</td>
-                <td>
-                  <InputGroup>
-                    <Button
-                      variant="outline-secondary"
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    >
-                      -
-                    </Button>
-                    <Form.Control
-                      type="text"
-                      value={quantity}
-                      readOnly
-                      className="text-center"
-                    />
-                    <Button
-                      variant="outline-secondary"
-                      onClick={() => setQuantity(quantity + 1)}
-                    >
-                      +
-                    </Button>
-                  </InputGroup>
-                </td>
-                <td>Rs {subtotal}</td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="d-flex align-items-center flex-column flex-md-row">
-                    <img
-                      src={productImage}
-                      alt="Anime panic Sticker"
-                      width="50"
-                      className="me-2"
-                    />
-                    <span>Anime panic Sticker</span>
-                  </div>
-                </td>
-                <td>Rs {price}</td>
-                <td>
-                  <InputGroup>
-                    <Button
-                      variant="outline-secondary"
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    >
-                      -
-                    </Button>
-                    <Form.Control
-                      type="text"
-                      value={quantity}
-                      readOnly
-                      className="text-center"
-                    />
-                    <Button
-                      variant="outline-secondary"
-                      onClick={() => setQuantity(quantity + 1)}
-                    >
-                      +
-                    </Button>
-                  </InputGroup>
-                </td>
-                <td>Rs {subtotal}</td>
-              </tr>
+              {items.map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <div className="d-flex align-items-center flex-column flex-md-row">
+                      <img
+                        src={item.image || "default-image-path.jpg"} // Add a default image path
+                        alt={"no"}
+                        width="50"
+                        className="me-2"
+                      />
+                      <span>{item.name}</span>
+                    </div>
+                  </td>
+                  <td>Rs {item.price}</td>
+                  <td>
+                    <InputGroup>
+                      <Button
+                        variant="outline-secondary"
+                        style={{ borderRadius: "50px" }}
+                        onClick={() => handleDecrement(item.id)}
+                      >
+                        -
+                      </Button>
+                      <div
+                        className="px-3 border-5 btn-group-vertical  shadow-lg"
+                        style={{ border: "2px" }}
+                      >
+                        {item.quantity}
+                      </div>
+                      <Button
+                        variant="outline-secondary"
+                        style={{ borderRadius: "50px" }}
+                        onClick={() => handleIncrement(item)}
+                      >
+                        +
+                      </Button>
+                    </InputGroup>
+                  </td>
+                  <td>Rs {item.totalPrice.toFixed(2)}</td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </Col>
@@ -116,24 +91,12 @@ const Cart = () => {
               <tbody>
                 <tr>
                   <td>Subtotal</td>
-                  <td>Rs {subtotal}</td>
+                  <td>Rs {totalAmount.toFixed(2)}</td>
                 </tr>
                 <tr>
                   <td>Shipping</td>
                   <td>
-                    <Form.Check
-                      type="radio"
-                      id="free-shipping"
-                      label="Free shipping"
-                      name="shipping"
-                      defaultChecked
-                    />
-                    <Form.Check
-                      type="radio"
-                      id="flat-rate"
-                      label="Flat rate: Rs 250"
-                      name="shipping"
-                    />
+                    <div>Flat rate: Rs 250</div>
                     <small className="text-muted">
                       Shipping options will be updated during checkout.
                     </small>
@@ -144,7 +107,7 @@ const Cart = () => {
                     <strong>Total</strong>
                   </td>
                   <td>
-                    <strong>Rs {subtotal}</strong>
+                    <strong>Rs {(totalAmount + 250).toFixed(2)}</strong>
                   </td>
                 </tr>
               </tbody>

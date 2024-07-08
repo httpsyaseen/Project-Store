@@ -9,28 +9,54 @@ import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Cart from "./pages/Cart";
+import CartScreen from "./pages/CartScreen.jsx";
+import { Provider } from "react-redux";
+import store, { persistor } from "./app/store.js";
+import { PersistGate } from "redux-persist/integration/react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+} from "react-router-dom";
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+const Layout = () => {
+  return (
+    <>
+      <Header
+        message={"Free Shipping over the order of Rs 2000/- and above."}
+      />
+      <ScrollToTop />
+      <Outlet />
+      <Footer />
+    </>
+  );
+};
 
 function App() {
   return (
     <>
-      <Router>
-        <ScrollToTop />
-        <Header
-          message={" Free Shipping over the order of Rs 2000/- and above."}
-        />
-        <Routes>
-          <Route path="/" index element={<LandingPage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/id" element={<ProductDetailsPage />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/checkout" element={<Checkout />} />
-        </Routes>
-      </Router>
-      <Footer />
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<LandingPage />} />
+                <Route path="products" index element={<ProductsPage />} />
+                <Route
+                  path="product-detail/:id"
+                  element={<ProductDetailsPage />}
+                />
+                <Route path="cart" element={<Cart />} />
+                <Route path="login" element={<Login />} />
+                <Route path="signup" element={<Signup />} />
+                <Route path="checkout" element={<Checkout />} />
+                <Route path="test" element={<CartScreen />} />
+              </Route>
+            </Routes>
+          </Router>
+        </PersistGate>
+      </Provider>
     </>
   );
 }

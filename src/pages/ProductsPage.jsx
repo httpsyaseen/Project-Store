@@ -1,7 +1,8 @@
 import { Container, Row, Col, Dropdown } from "react-bootstrap";
-import Product from "../components/Product";
 import { Pagination } from "@mui/material";
 import { useEffect, useState } from "react";
+
+import ProductCard from "../components/ProductCard";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -44,7 +45,7 @@ const ProductsPage = () => {
         </Row>
         <Row className="my-5">
           {products.map((product, i) => (
-            <Product key={i} product={product} />
+            <ProductCard key={i} product={product} />
           ))}
         </Row>
         <Row className="justify-content-center">

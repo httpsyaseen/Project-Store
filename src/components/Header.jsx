@@ -1,5 +1,7 @@
 import { Navbar, Container, Nav, Row, NavDropdown, Col } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header = ({ message }) => {
   return (
@@ -12,6 +14,7 @@ const Header = ({ message }) => {
 };
 
 function NavigationBar() {
+  const quantity = useSelector((state) => state.cart.totalQuantity);
   return (
     <Navbar expand="md" bg="light" variant="light" className="shadow">
       <Container fluid>
@@ -43,10 +46,25 @@ function NavigationBar() {
             </NavDropdown>
           </Nav>
           <Nav className="ms-auto">
-            <Nav.Link href="#" className="nav-link mr-3">
+            <Link to={"/cart"} className="nav-link mr-3 position-relative">
               <FaShoppingCart size={"1.8rem"} className="pe-2" />
               Cart
-            </Nav.Link>
+              <div
+                className="position-absolute text-center"
+                style={{
+                  top: -2,
+                  left: 19,
+                  backgroundColor: "#1f2562",
+                  color: "white",
+                  paddin: "5px",
+                  width: "20px",
+                  fontSize: "14px",
+                  borderRadius: "10px",
+                }}
+              >
+                {quantity > 0 && quantity}
+              </div>
+            </Link>
 
             <NavDropdown
               title={

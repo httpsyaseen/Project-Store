@@ -1,9 +1,59 @@
 import productImage from "../assets/product.webp";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Image, Button, Carousel } from "react-bootstrap";
+import { Container, Row, Col, Button, Carousel } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const ProductDetails = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
+
+  const [product, setProduct] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/products/${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data = await response.json();
+
+        setProduct(data.product);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [id]);
+
+  const base64ToImageUrl = (base64String) => {
+    const byteString = atob(base64String.split(",")[1]);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ab], { type: "image/png" });
+    return URL.createObjectURL(blob);
+  };
+
+  const carouselItems = [
+    {
+      src: "https://picsum.photos/id/258/700",
+      alt: "First slide",
+    },
+    {
+      src: `https://picsum.photos/id/256/700`,
+      alt: "Second slide",
+    },
+    {
+      src: "https://picsum.photos/id/254/700",
+      alt: "Third slide",
+    },
+  ];
+
   const photo = `https://picsum.photos/id/256/700`;
   return (
     <>
@@ -12,48 +62,23 @@ const ProductDetails = () => {
           <Col md={6}>
             <Row className="mt-5">
               <Carousel fade>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 c-image"
-                    src={productImage}
-                    alt="First slide"
-                  />
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 c-image"
-                    src={photo}
-                    alt="Second slide"
-                  />
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 c-image"
-                    src={productImage}
-                    alt="Third slide"
-                  />
-                </Carousel.Item>
+                {carouselItems.map((item, index) => (
+                  <Carousel.Item key={index}>
+                    <img
+                      className="d-block w-100 c-image"
+                      src={item.src}
+                      alt={item.alt}
+                    />
+                  </Carousel.Item>
+                ))}
               </Carousel>
             </Row>
           </Col>
           <Col md={6} className="mt-5 ">
             <Row className="ms-md-5 ps-md-5 gap-4 ">
-              <h2>Anime panic Sticker</h2>
-              <h3>Rs 78</h3>
-              <div>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi
-                voluptates maiores dicta non aut deserunt repudiandae libero
-                sint incidunt, nam dolor vero dolore reprehenderit architecto
-                qui tempora nisi et rerum quia nesciunt! Sapiente quisquam rem
-                aspernatur! Earum rerum a ex totam quibusdam, delectus rem
-                ratione. Lorem ipsum dolor, sit amet consectetur adipisicing
-                elit. Quidem praesentium laboriosam omnis eaque rerum sequi
-                quaerat repellendus veritatis iste deserunt corrupti incidunt
-                dolor reprehenderit iusto sit cupiditate, necessitatibus iure
-                porro unde veniam excepturi eligendi accusantium. Corrupti
-                ducimus vitae voluptatum repellendus! Tempora quasi quo officia
-                quis veritatis amet et, vero quibusdam.
-              </div>
+              <h2>{product.name}</h2>
+              <h3>Rs {product.price}/-</h3>
+              <div>{product.description}</div>
               <div className="d-flex align-items-center mb-3">
                 <Button variant="outline-secondary" size="sm" className="px-3">
                   -
