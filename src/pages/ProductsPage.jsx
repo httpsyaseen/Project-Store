@@ -1,28 +1,24 @@
 import { Container, Row, Col, Dropdown } from "react-bootstrap";
 import { Pagination } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import ProductCard from "../components/ProductCard";
+import { fetchProducts } from "../features/productSlice";
 
 const ProductsPage = () => {
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const { products, status, error } = useSelector((state) => state.product);
+  console.log(products, status);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/products");
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await response.json();
-        setProducts(data.products);
-      } catch (error) {
-        console.error("Error fetching products:", error);
+  useEffect(
+    function () {
+      if (status === "idle") {
+        dispatch(fetchProducts());
       }
-    };
-
-    fetchProducts();
-  }, []);
+    },
+    [status, dispatch]
+  );
 
   return (
     <>

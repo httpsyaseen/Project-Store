@@ -12,21 +12,25 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useSelector, useDispatch } from "react-redux";
 import { cartActions } from "../features/cartSlice";
+import base64ToImageUrl from "../utils/imageConverter";
 
 export default function Cart() {
   const { items, totalAmount } = useSelector((state) => state.cart);
 
   return (
-    <Container maxWidth="lg" sx={{ py: 6 }}>
+    <Container maxWidth="lg" sx={{ py: 6 }} className="defualt-height">
       <Typography variant="h3" gutterBottom>
         Your Cart
       </Typography>
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>
           <Paper elevation={3} sx={{ p: 3 }}>
+            {items.length === 0 && (
+              <Typography variant="h4">Your Cart is Empty</Typography>
+            )}
             {items.map((item, index) => (
               <>
-                <CartItem item={item} />
+                <CartItem item={item} key={index} />
                 {index < items.length - 1 && <Divider sx={{ my: 3 }} />}
               </>
             ))}
@@ -57,11 +61,12 @@ function CartItem({ item }) {
         <Grid container spacing={2} alignItems="center" flexWrap={"nowrap"}>
           <Grid item>
             <img
-              src={item.image}
+              src={base64ToImageUrl(item.image)}
               alt="Product Image"
               width={80}
               height={80}
               style={{ borderRadius: "4px", objectFit: "cover" }}
+              onError={(e) => console.log(e)}
             />
           </Grid>
           <Grid item>

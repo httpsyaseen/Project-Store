@@ -1,110 +1,126 @@
-import React from "react";
+import React, { useState } from "react";
 import {
+  Grid,
   Card,
-  CardContent,
   CardMedia,
+  ImageList,
+  ImageListItem,
+  IconButton,
   Typography,
-  Box,
   Rating,
-  Chip,
+  ToggleButtonGroup,
+  ToggleButton,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  TextField,
   Button,
-  styled,
+  Box,
 } from "@mui/material";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Col } from "react-bootstrap";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 
-const StyledCard = styled(Card)(({ theme }) => ({
-  maxWidth: 300,
-  margin: "auto",
-  display: "flex",
-  flexDirection: "column",
-  height: "100%",
-}));
+const productImages = [
+  "https://picsum.photos/id/256/700",
+  "https://picsum.photos/id/257/700",
+  "https://picsum.photos/id/258/700",
+  "https://picsum.photos/id/259/700",
+];
 
-const ContentBox = styled(Box)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  padding: theme.spacing(2),
-  flexGrow: 1,
-}));
+const Test = () => {
+  const [mainImage, setMainImage] = useState(productImages[0]);
+  const [size, setSize] = useState("S");
+  const [color, setColor] = useState("black");
+  const [quantity, setQuantity] = useState(1);
 
-const ProductName = styled(Typography)(({ theme }) => ({
-  display: "-webkit-box",
-  WebkitLineClamp: 2,
-  WebkitBoxOrient: "vertical",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  height: "3em",
-  marginBottom: theme.spacing(1),
-}));
+  const handleSizeChange = (event, newSize) => {
+    if (newSize !== null) {
+      setSize(newSize);
+    }
+  };
 
-const ProductCard = () => {
-  const product = {
-    name: "Tiger Printed Cotton Half Sleeves O Neck Short & T-Shirt Set",
-    image: "https://picsum.photos/id/256/700",
-    rating: 4.5,
-    reviewCount: 480,
-    discountPrice: 767,
-    originalPrice: 1999,
-    discountPercentage: 62,
+  const handleColorChange = (event) => {
+    setColor(event.target.value);
   };
 
   return (
-    <Col md={4} lg={3} className="mt-3">
-      <StyledCard className="product-card">
-        <CardMedia
-          component="img"
-          sx={{
-            width: "100%",
-            height: 200,
-            objectFit: "cover",
-          }}
-          image={product.image}
-          alt={product.name}
-        />
-        <ContentBox>
-          <CardContent>
-            <ProductName variant="subtitle1" component="h2">
-              {product.name}
-            </ProductName>
-            <Box display="flex" alignItems="center" mb={1}>
-              <Rating value={product.rating} readOnly size="small" />
-              <Typography variant="body2" color="text.secondary" ml={1}>
-                ({product.reviewCount})
-              </Typography>
-            </Box>
-            <Box display="flex" alignItems="baseline" mb={1}>
-              <Typography variant="h6" color="error" mr={1}>
-                Rs.{product.discountPrice}
-              </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ textDecoration: "line-through" }}
-              >
-                Rs.{product.originalPrice}
-              </Typography>
-            </Box>
-            <Chip
-              label={`${product.discountPercentage}% OFF`}
-              color="error"
-              size="small"
-              sx={{ fontWeight: "bold", marginBottom: 1 }}
-            />
-          </CardContent>
-          <Button
-            variant="contained"
-            startIcon={<ShoppingCartIcon />}
-            fullWidth
-            sx={{ mt: "auto" }}
-          >
-            Add to Cart
-          </Button>
-        </ContentBox>
-      </StyledCard>
-    </Col>
+    <Grid container spacing={4}>
+      <Grid item xs={12} md={6}>
+        <Card>
+          <CardMedia
+            component="img"
+            height="500"
+            image={mainImage}
+            alt="Blazer Jacket"
+          />
+          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
+            <IconButton>
+              <ChevronLeft />
+            </IconButton>
+            <IconButton>
+              <ChevronRight />
+            </IconButton>
+          </Box>
+        </Card>
+        <ImageList cols={4} rowHeight={100} sx={{ mt: 2 }}>
+          {productImages.map((img, index) => (
+            <ImageListItem key={index} onClick={() => setMainImage(img)}>
+              <img src={img} alt={`Thumbnail ${index + 1}`} loading="lazy" />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Typography variant="h4" gutterBottom>
+          Blazer Jacket
+        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+          <Rating value={4.9} precision={0.1} readOnly />
+          <Typography variant="body2" sx={{ ml: 1 }}>
+            (4.9)
+          </Typography>
+        </Box>
+        <Typography variant="h5" gutterBottom>
+          $2500
+        </Typography>
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="subtitle1" gutterBottom>
+            Available Size
+          </Typography>
+          <ToggleButtonGroup value={size} exclusive onChange={handleSizeChange}>
+            <ToggleButton value="S">S</ToggleButton>
+            <ToggleButton value="M">M</ToggleButton>
+            <ToggleButton value="L">L</ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="subtitle1" gutterBottom>
+            Available Color
+          </Typography>
+          <RadioGroup row value={color} onChange={handleColorChange}>
+            <FormControlLabel value="black" control={<Radio />} label="Black" />
+            <FormControlLabel value="gray" control={<Radio />} label="Gray" />
+          </RadioGroup>
+        </Box>
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="subtitle1" gutterBottom>
+            Quantity
+          </Typography>
+          <TextField
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(parseInt(e.target.value))}
+            InputProps={{ inputProps: { min: 1 } }}
+          />
+        </Box>
+        <Button variant="contained" color="primary" size="large">
+          Add to cart
+        </Button>
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          Last 1 left - make it yours!
+        </Typography>
+      </Grid>
+    </Grid>
   );
 };
 
-export default ProductCard;
+export default Test;

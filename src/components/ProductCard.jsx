@@ -15,6 +15,7 @@ import { Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { cartActions } from "../features/cartSlice";
+import base64ToImageUrl from "../utils/imageConverter";
 ///////////////
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -46,8 +47,8 @@ const ProductName = styled(Typography)(({ theme }) => ({
 }));
 
 const ProductCard = ({ product }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const addToCartHandler = () => {
     toast.success("Add to cart!", {
@@ -67,36 +68,13 @@ const ProductCard = ({ product }) => {
         id: product._id,
         name: product.name,
         price: product.price,
-        image: base64ToImageUrl(product.image),
+        image: product.image,
       })
     );
   };
 
-  const base64ToImageUrl = (base64String) => {
-    const byteString = atob(base64String);
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    const blob = new Blob([ab], { type: "image/png" });
-    return URL.createObjectURL(blob);
-  };
-
   return (
     <Col md={4} lg={3} className="mt-5">
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
       <StyledCard className="shadow-lg">
         <CardMedia
           component="img"
@@ -109,8 +87,15 @@ const ProductCard = ({ product }) => {
           alt={product.name}
         />
         <ContentBox>
-          <CardContent>
-            <ProductName variant="subtitle1" component="h2">
+          <CardContent
+            onClick={() => navigate(`/product-detail/${product._id}`)}
+            style={{ cursor: "pointer" }}
+          >
+            <ProductName
+              variant="subtitle1"
+              component="h2"
+              style={{ fontWeight: "bold" }}
+            >
               {product.name}
             </ProductName>
             <Box display="flex" alignItems="center" mb={1}>

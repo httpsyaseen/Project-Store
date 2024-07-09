@@ -1,12 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { saveState, loadState } from "../utils/storage";
+
+const initialState = loadState("cart") || {
+  items: [],
+  totalQuantity: 0,
+  totalAmount: 0,
+};
 
 const cartSlice = createSlice({
   name: "cart",
-  initialState: {
-    items: [],
-    totalQuantity: 0,
-    totalAmount: 0,
-  },
+  initialState,
   reducers: {
     addItemToCart(state, action) {
       const newItem = action.payload;
@@ -26,6 +29,7 @@ const cartSlice = createSlice({
         existingItem.totalPrice += newItem.price;
       }
       state.totalAmount += newItem.price;
+      saveState("cart", state);
     },
     removeItemFromCart(state, action) {
       const id = action.payload;
@@ -38,11 +42,13 @@ const cartSlice = createSlice({
         existingItem.totalPrice -= existingItem.price;
       }
       state.totalAmount -= existingItem.price;
+      saveState("cart", state);
     },
     clearCart(state) {
       state.items = [];
       state.totalQuantity = 0;
       state.totalAmount = 0;
+      saveState("cart", state);
     },
   },
 });

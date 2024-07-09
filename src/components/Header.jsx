@@ -1,5 +1,6 @@
 import { Navbar, Container, Nav, Row, NavDropdown, Col } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -18,31 +19,52 @@ function NavigationBar() {
   return (
     <Navbar expand="md" bg="light" variant="light" className="shadow">
       <Container fluid>
-        <Navbar.Brand href="/">
-          <img
-            src="https://tinopia.com/wp-content/uploads/2023/12/180-by-60-01.png"
-            alt="Logo"
-          />
-        </Navbar.Brand>
+        <LinkContainer to={"/"}>
+          <Navbar.Brand>
+            <img
+              src="https://tinopia.com/wp-content/uploads/2023/12/180-by-60-01.png"
+              alt="Logo"
+            />
+          </Navbar.Brand>
+        </LinkContainer>
         <Navbar.Toggle aria-controls="navbarNav" />
         <Navbar.Collapse id="navbarNav">
           <Nav className="me-auto">
-            <Nav.Link href="#">Home</Nav.Link>
-            <Nav.Link href="/products">Products</Nav.Link>
-            <Nav.Link href="#">About</Nav.Link>
-            <Nav.Link href="#">Contact</Nav.Link>
+            <LinkContainer to={"/"}>
+              <Nav.Link>Home</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to={"/"}>
+              <Nav.Link>Products</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to={"/"}>
+              <Nav.Link>About</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to={"/"}>
+              <Nav.Link>Contact</Nav.Link>
+            </LinkContainer>
+
             <NavDropdown
               title="Categories"
               id="navbarDropdown"
               className="d-md-none"
             >
-              <NavDropdown.Item href="/products">
-                Greeting Cards
-              </NavDropdown.Item>
-              <NavDropdown.Item href="/products">Home Decors</NavDropdown.Item>
-              <NavDropdown.Item href="/products">Eidi Cards</NavDropdown.Item>
-              <NavDropdown.Item href="/products">Stickers</NavDropdown.Item>
-              <NavDropdown.Item href="/products">Envelop</NavDropdown.Item>
+              <LinkContainer to={"/products"}>
+                <NavDropdown.Item>Greeting Cards</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to={"/products"}>
+                <NavDropdown.Item href="/products">
+                  Home Decors
+                </NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to={"/products"}>
+                <NavDropdown.Item href="/products">Eidi Cards</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to={"/products"}>
+                <NavDropdown.Item href="/products">Stickers</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to={"/products"}>
+                <NavDropdown.Item href="/products">Envelop</NavDropdown.Item>
+              </LinkContainer>
             </NavDropdown>
           </Nav>
           <Nav className="ms-auto">
@@ -100,12 +122,12 @@ function Categories() {
     <Container className="d-none d-md-block categories">
       <Row>
         <Col className="d-flex justify-content-center">
-          <a
-            href="/products"
+          <Link
+            to={"/products"}
             className="category-item p-4 text-decoration-none m-2 fw-medium"
           >
             Greeting Cards
-          </a>
+          </Link>
           <a
             href="/products"
             className="category-item p-4 text-decoration-none m-2 fw-medium"

@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Carousel } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import base64ToImageUrl from "../utils/imageConverter";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [product, setProduct] = useState([]);
+  const [image, setImage] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -20,6 +22,11 @@ const ProductDetails = () => {
         const data = await response.json();
 
         setProduct(data.product);
+        setImage([
+          base64ToImageUrl(data.product.image),
+          base64ToImageUrl(data.product.image),
+          base64ToImageUrl(data.product.image),
+        ]);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -27,32 +34,7 @@ const ProductDetails = () => {
 
     fetchProducts();
   }, [id]);
-
-  const base64ToImageUrl = (base64String) => {
-    const byteString = atob(base64String.split(",")[1]);
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    const blob = new Blob([ab], { type: "image/png" });
-    return URL.createObjectURL(blob);
-  };
-
-  const carouselItems = [
-    {
-      src: "https://picsum.photos/id/258/700",
-      alt: "First slide",
-    },
-    {
-      src: `https://picsum.photos/id/256/700`,
-      alt: "Second slide",
-    },
-    {
-      src: "https://picsum.photos/id/254/700",
-      alt: "Third slide",
-    },
-  ];
+  console.log(image);
 
   const photo = `https://picsum.photos/id/256/700`;
   return (
@@ -62,12 +44,12 @@ const ProductDetails = () => {
           <Col md={6}>
             <Row className="mt-5">
               <Carousel fade>
-                {carouselItems.map((item, index) => (
+                {image.map((item, index) => (
                   <Carousel.Item key={index}>
                     <img
                       className="d-block w-100 c-image"
-                      src={item.src}
-                      alt={item.alt}
+                      src={item}
+                      alt={`Slide ${index + 1}`}
                     />
                   </Carousel.Item>
                 ))}
