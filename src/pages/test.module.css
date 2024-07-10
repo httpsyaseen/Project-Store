@@ -1,0 +1,39 @@
+/* styles.css */
+.sidebar-title {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #343a40;
+}
+
+.form-label {
+  font-weight: bold;
+  margin-top: 10px;
+  color: #495057;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.apply-filters-btn {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.offcanvas-body {
+  padding: 20px;
+}
+
+.row {
+  margin-bottom: 10px;
+}
+
+.offcanvas {
+  background-color: #f8f9fa;
+}
+
+.offcanvas-header {
+  background-color: #e9ecef;
+}

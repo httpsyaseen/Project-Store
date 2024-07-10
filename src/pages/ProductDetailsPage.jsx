@@ -1,13 +1,13 @@
 import productImage from "../assets/product.webp";
-import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Carousel } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import base64ToImageUrl from "../utils/imageConverter";
+import { useEffect, useState } from "react";
 
 const ProductDetails = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [product, setProduct] = useState([]);
   const [image, setImage] = useState([]);

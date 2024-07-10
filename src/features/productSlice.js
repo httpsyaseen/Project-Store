@@ -3,18 +3,24 @@ import axios from "axios";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  async () => {
-    const res = await axios.get("http://localhost:3000/products");
-    console.log("inslice", res);
-    return res.data;
+  async ({ page, limit }, { getState }) => {
+    const { product } = getState();
+
+    if (product.byPage[page]) return null;
+    const res = await axios.get(
+      `http://localhost:3000/products?page=${page}&limit=${limit}`
+    );
+
+    return { page, data: res.data };
   }
 );
 
 const productSlice = createSlice({
   name: "products",
   initialState: {
-    products: [],
+    byPage: {},
     status: "idle",
+    totalProducts: 0,
     error: null,
   },
   reducers: {},
@@ -24,8 +30,15 @@ const productSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
+        if (action.payload) {
+          const {
+            page,
+            data: { results, products },
+          } = action.payload;
+          state.byPage[page] = products;
+          state.totalProducts = results;
+        }
         state.status = "succeeded";
-        state.products = action.payload.products;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.status = "failed";

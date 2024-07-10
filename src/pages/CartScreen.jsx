@@ -6,6 +6,7 @@ import {
   Grid,
   Paper,
   Divider,
+  Box,
   IconButton,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -13,6 +14,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { useSelector, useDispatch } from "react-redux";
 import { cartActions } from "../features/cartSlice";
 import base64ToImageUrl from "../utils/imageConverter";
+import EmptyCart from "../assets/empty.jpg";
 
 export default function Cart() {
   const { items, totalAmount } = useSelector((state) => state.cart);
@@ -26,7 +28,23 @@ export default function Cart() {
         <Grid item xs={12} md={8}>
           <Paper elevation={3} sx={{ p: 3 }}>
             {items.length === 0 && (
-              <Typography variant="h4">Your Cart is Empty</Typography>
+              <Box sx={{ textAlign: "center" }}>
+                <Box
+                  component="img"
+                  src={EmptyCart}
+                  alt="Empty Cart"
+                  sx={{
+                    width: "100%",
+                    maxWidth: { xs: "200px", sm: "300px", md: "400px" },
+                    height: "auto",
+                    mb: 2,
+                  }}
+                />
+                <Typography variant="h4">Shopping Cart is Empty!</Typography>
+                <Typography variant="h6">
+                  {"But it's never too late to fix it :)"}
+                </Typography>
+              </Box>
             )}
             {items.map((item, index) => (
               <>
@@ -45,7 +63,6 @@ export default function Cart() {
 }
 
 function CartItem({ item }) {
-  console.log(item);
   const dispatch = useDispatch();
   const handleIncrement = (item) => {
     dispatch(cartActions.addItemToCart(item));

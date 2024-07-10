@@ -13,6 +13,7 @@ import CartScreen from "./pages/CartScreen.jsx";
 import { Provider } from "react-redux";
 import store from "./app/store.js";
 import { ToastContainer } from "react-toastify";
+import Sidebar from "./components/Sidebar.jsx";
 
 import {
   BrowserRouter as Router,
@@ -56,15 +57,12 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<LandingPage />} />
               <Route path="products" index element={<ProductsPage />} />
-              <Route
-                path="product-detail/:id"
-                element={<ProductDetailsPage />}
-              />
+              <Route path="product-detail/:id" element={<Test />} />
               <Route path="cart" element={<CartScreen />} />
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<Signup />} />
               <Route path="checkout" element={<Checkout />} />
-              <Route path="test" element={<Test />} />
+              <Route path="test" element={<Sidebar />} />
             </Route>
           </Routes>
         </Router>
