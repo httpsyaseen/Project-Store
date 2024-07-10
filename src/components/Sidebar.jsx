@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Offcanvas, Form, Col, Row } from "react-bootstrap";
 import styles from "./sidebar.module.css";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { fetchProducts } from "../features/productSlice";
 
-const Sidebar = ({ open = false }) => {
-  const [show, setShow] = useState(open);
-
+const Sidebar = () => {
+  const [show, setShow] = useState(false);
   const [sort, setSort] = useState("");
   const [category, setCategory] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [rating, setRating] = useState("");
+  const [categories, setCategories] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(function () {
+    async function fetchCategories() {
+      const res = await axios.get("http://localhost:3000/products/categories");
+      setCategories(res.data.categories);
+    }
+    fetchCategories();
+  }, []);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -22,14 +34,26 @@ const Sidebar = ({ open = false }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const baseUrl = "http://localhost:3000/products";
 
-    let url = `${baseUrl}?`;
-    if (sort) url += `sort=${sort}`;
-    if (minPrice) url += `price[gte]=${minPrice}`;
-    if (maxPrice) url += `price[lte]=${maxPrice}`;
+    let url = ``;
+    if (sort) url += `sort=${sort}&`;
+    if (minPrice) url += `price[gte]=${minPrice}&`;
+    if (maxPrice) url += `price[lte]=${maxPrice}&`;
+    if (category) url += `category=${category}&`;
+    if (rating) url += `rating[gte]=${rating}&`;
 
-    console.log("Generated URL:", url);
+    dispatch(fetchProducts({ query: url }));
+    setShow(false);
+  };
+
+  const clearAllStates = () => {
+    setSort("");
+    setCategory("");
+    setMinPrice("");
+    setMaxPrice("");
+    setRating("");
+    dispatch(fetchProducts({ clear: true }));
+    setShow(false);
   };
 
   return (
@@ -39,13 +63,13 @@ const Sidebar = ({ open = false }) => {
         className="mx-auto d-block my-3"
         onClick={handleShow}
       >
-        Open Sidebar
+        Filter Products
       </Button>
 
       <Offcanvas
         show={show}
         onHide={handleClose}
-        placement="end"
+        placement="start"
         className={styles.offcanvas}
       >
         <Offcanvas.Header closeButton className={styles["offcanvas-header"]}>
@@ -55,7 +79,6 @@ const Sidebar = ({ open = false }) => {
         </Offcanvas.Header>
         <Offcanvas.Body className={styles["offcanvas-body"]}>
           <Form onSubmit={handleSubmit}>
-            {/* Sorting Options */}
             <Form.Group
               controlId="sortOptions"
               className={styles["form-group"]}
@@ -83,13 +106,16 @@ const Sidebar = ({ open = false }) => {
                 onChange={handleCategoryChange}
               >
                 <option value="">Select...</option>
-                <option value="electronics">Electronics</option>
-                <option value="fashion">Fashion</option>
-                <option value="homekitchen">Home & Kitchen</option>
+                {categories.map((cat) => (
+                  <>
+                    <option value={cat._id} key={cat._id}>
+                      {cat._id}
+                    </option>
+                  </>
+                ))}
               </Form.Control>
             </Form.Group>
 
-            {/* Price Limit */}
             <Form.Group controlId="priceLimit" className={styles["form-group"]}>
               <Form.Label className={styles["form-label"]}>
                 Price Limit
@@ -114,7 +140,6 @@ const Sidebar = ({ open = false }) => {
               </Row>
             </Form.Group>
 
-            {/* Rating Filter */}
             <Form.Group
               controlId="ratingFilter"
               className={styles["form-group"]}
@@ -141,6 +166,13 @@ const Sidebar = ({ open = false }) => {
               Apply Filters
             </Button>
           </Form>
+          <Button
+            variant="dark"
+            onClick={clearAllStates}
+            className={styles["apply-filters-btn"]}
+          >
+            Clear Filters
+          </Button>
         </Offcanvas.Body>
       </Offcanvas>
     </>

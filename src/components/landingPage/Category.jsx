@@ -1,13 +1,16 @@
 import { Container, Row } from "react-bootstrap";
 import ProductCard from "../ProductCard";
 import { useEffect, useState } from "react";
+import SkeletonLoading from "../SkeletonLoading";
 
 const Category = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(function () {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const response = await fetch("http://localhost:3000/products/trending");
         if (!response.ok) {
           throw new Error("Failed to fetch products");
@@ -16,6 +19,8 @@ const Category = () => {
         setProducts(data.products);
       } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -30,8 +35,14 @@ const Category = () => {
           <p className="text-center mx-4 h2">Trending Products</p>
           <span className="line"></span>
         </div>
+        {loading && (
+          <>
+            <Row>
+              <SkeletonLoading />
+            </Row>
+          </>
+        )}
         <Row>
-          {/* {new Array(4).fill(null).map((el, i) => ( */}
           {products.map((product, i) => (
             <ProductCard key={i} product={product} />
           ))}

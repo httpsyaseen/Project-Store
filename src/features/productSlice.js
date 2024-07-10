@@ -3,15 +3,14 @@ import axios from "axios";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  async ({ page, limit }, { getState }) => {
+  async ({ page = 1, limit = 10, query = "", clear = false }, { getState }) => {
     const { product } = getState();
-
-    if (product.byPage[page]) return null;
+    if (product.byPage[page] && !query && !clear) return null;
     const res = await axios.get(
-      `http://localhost:3000/products?page=${page}&limit=${limit}`
+      `http://localhost:3000/products?${query}page=${page}&limit=${limit}`
     );
 
-    return { page, data: res.data };
+    return { page, data: res.data, query };
   }
 );
 
@@ -33,10 +32,11 @@ const productSlice = createSlice({
         if (action.payload) {
           const {
             page,
-            data: { results, products },
+            data: { totalProducts, products, results },
+            query,
           } = action.payload;
           state.byPage[page] = products;
-          state.totalProducts = results;
+          state.totalProducts = query ? results : totalProducts;
         }
         state.status = "succeeded";
       })

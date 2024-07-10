@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { cartActions } from "../features/cartSlice";
 import base64ToImageUrl from "../utils/imageConverter";
 import EmptyCart from "../assets/empty.jpg";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function Cart() {
   const { items, totalAmount } = useSelector((state) => state.cart);
@@ -65,7 +66,7 @@ export default function Cart() {
 function CartItem({ item }) {
   const dispatch = useDispatch();
   const handleIncrement = (item) => {
-    dispatch(cartActions.addItemToCart(item));
+    dispatch(cartActions.addItemToCart({ ...item, quantity: 1 }));
   };
 
   const handleDecrement = (id) => {
@@ -118,6 +119,11 @@ function CartItem({ item }) {
 
 function OrderSummary({ subtotal, shipping }) {
   const total = subtotal + shipping;
+  const dispatch = useDispatch();
+
+  const handleClearCart = () => {
+    dispatch(cartActions.clearCart());
+  };
 
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
@@ -154,6 +160,15 @@ function OrderSummary({ subtotal, shipping }) {
       </Button>
       <Button variant="outlined" fullWidth sx={{ mt: 2 }}>
         Continue Shopping
+      </Button>
+      <Button
+        variant="contained"
+        fullWidth
+        sx={{ mt: 2 }}
+        onClick={handleClearCart}
+        startIcon={<DeleteIcon />}
+      >
+        Clear Cart
       </Button>
     </Paper>
   );

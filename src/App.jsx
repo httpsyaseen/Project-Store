@@ -57,12 +57,15 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<LandingPage />} />
               <Route path="products" index element={<ProductsPage />} />
-              <Route path="product-detail/:id" element={<Test />} />
+              <Route
+                path="product-detail/:id"
+                element={<ProductDetailsPage />}
+              />
               <Route path="cart" element={<CartScreen />} />
               <Route path="login" element={<Login />} />
               <Route path="signup" element={<Signup />} />
               <Route path="checkout" element={<Checkout />} />
-              <Route path="test" element={<Sidebar />} />
+              <Route path="test" element={<Test />} />
             </Route>
           </Routes>
         </Router>

@@ -1,16 +1,35 @@
-import productImage from "../assets/product.webp";
-import { Container, Row, Col, Button, Carousel } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Grid,
+  Typography,
+  Button,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Card,
+  IconButton,
+  Rating,
+  Chip,
+} from "@mui/material";
+import { Carousel, Container } from "react-bootstrap";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useParams } from "react-router-dom";
 import base64ToImageUrl from "../utils/imageConverter";
-import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { cartActions } from "../features/cartSlice";
 
-const ProductDetails = () => {
-  const navigate = useNavigate();
+const ProductPage = () => {
   const { id } = useParams();
-
+  const [quantity, setQuantity] = useState(1);
+  const [selectedVariant, setSelectedVariant] = useState("");
   const [product, setProduct] = useState([]);
   const [image, setImage] = useState([]);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -36,13 +55,33 @@ const ProductDetails = () => {
   }, [id]);
   console.log(image);
 
-  const photo = `https://picsum.photos/id/256/700`;
+  const handleQuantityChange = (change) => {
+    if (quantity <= 1 && change < 0) return;
+    setQuantity((quantity) => quantity + change);
+  };
+
+  const handleVariantChange = (event) => {
+    setSelectedVariant(event.target.value);
+  };
+
+  const handleAddToCart = () => {
+    dispatch(
+      cartActions.addItemToCart({
+        id: product._id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: quantity,
+      })
+    );
+  };
+
   return (
-    <>
-      <Container className="mt-5 defualt-height">
-        <Row>
-          <Col md={6}>
-            <Row className="mt-5">
+    <Container>
+      <Box sx={{ flexGrow: 1, p: 3 }}>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <Card elevation={3}>
               <Carousel fade>
                 {image.map((item, index) => (
                   <Carousel.Item key={index}>
@@ -54,49 +93,87 @@ const ProductDetails = () => {
                   </Carousel.Item>
                 ))}
               </Carousel>
-            </Row>
-          </Col>
-          <Col md={6} className="mt-5 ">
-            <Row className="ms-md-5 ps-md-5 gap-4 ">
-              <h2>{product.name}</h2>
-              <h3>Rs {product.price}/-</h3>
-              <div>{product.description}</div>
-              <div className="d-flex align-items-center mb-3">
-                <Button variant="outline-secondary" size="sm" className="px-3">
-                  -
-                </Button>
-                <input
-                  type="text"
-                  className="form-control mx-2 text-center"
-                  style={{ width: "80px" }}
-                  value="1"
-                  readOnly
-                />
-                <Button variant="outline-secondary" size="sm" className="px-3">
-                  +
-                </Button>
-              </div>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{ display: "flex", flexDirection: "column", height: "100%" }}
+            >
+              <Typography variant="h4" gutterBottom fontWeight="bold">
+                {product.name}
+              </Typography>
+
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Rating value={4.5} precision={0.5} readOnly />
+                <Typography variant="body2" sx={{ ml: 1 }}>
+                  (150 reviews)
+                </Typography>
+              </Box>
+
+              <Typography variant="h5" color="primary" gutterBottom>
+                ${product.price}
+              </Typography>
+
+              <Chip
+                label="In Stock"
+                color="success"
+                sx={{ width: "fit-content", mb: 2 }}
+              />
+
+              <Typography variant="body1" paragraph>
+                {product.description}
+              </Typography>
+
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Select Variant</InputLabel>
+                <Select
+                  value={selectedVariant}
+                  label="Select Variant"
+                  onChange={handleVariantChange}
+                >
+                  <MenuItem value="black">Black</MenuItem>
+                  <MenuItem value="silver">Silver</MenuItem>
+                  <MenuItem value="gold">Gold</MenuItem>
+                </Select>
+              </FormControl>
+
+              <Box sx={{ display: "flex", alignItems: "center", my: 2 }}>
+                <Typography variant="body1" mr={2}>
+                  Quantity:
+                </Typography>
+                <IconButton
+                  onClick={() => handleQuantityChange(-1)}
+                  size="small"
+                >
+                  <RemoveIcon />
+                </IconButton>
+                <Typography variant="body1" sx={{ mx: 2 }}>
+                  {quantity}
+                </Typography>
+                <IconButton
+                  onClick={() => handleQuantityChange(1)}
+                  size="small"
+                >
+                  <AddIcon />
+                </IconButton>
+              </Box>
 
               <Button
-                className="add-to-cart w-50"
-                onClick={() => navigate(`/cart`)}
+                variant="contained"
+                startIcon={<ShoppingCartIcon />}
+                size="large"
+                onClick={handleAddToCart}
+                sx={{ mt: "5" }}
               >
                 Add to Cart
               </Button>
-
-              <p className="mt-3">
-                <small>SKU: 240004</small>
-                <br />
-                <small>
-                  Categories: <a href="#">Anime</a>, <a href="#">Stickers</a>
-                </small>
-              </p>
-            </Row>
-          </Col>
-        </Row>
-      </Container>
-    </>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+    </Container>
   );
 };
 
-export default ProductDetails;
+export default ProductPage;
