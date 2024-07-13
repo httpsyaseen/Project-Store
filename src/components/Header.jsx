@@ -1,8 +1,18 @@
-import { Navbar, Container, Nav, Row, NavDropdown, Col } from "react-bootstrap";
+import {
+  Navbar,
+  Container,
+  Nav,
+  Row,
+  NavDropdown,
+  Col,
+  Image,
+} from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../features/authSlice";
 
 const Header = ({ message }) => {
   return (
@@ -16,8 +26,20 @@ const Header = ({ message }) => {
 
 function NavigationBar() {
   const quantity = useSelector((state) => state.cart.totalQuantity);
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    dispatch(logout()).then(() => navigate("/"));
+  };
+
   return (
-    <Navbar expand="md" bg="light" variant="light" className="shadow">
+    <Navbar
+      expand="md"
+      bg="light"
+      variant="light"
+      className="shadow  sticky-top"
+    >
       <Container fluid>
         <LinkContainer to={"/"}>
           <Navbar.Brand>
@@ -72,16 +94,18 @@ function NavigationBar() {
               <FaShoppingCart size={"1.8rem"} className="pe-2" />
               Cart
               <div
-                className="position-absolute text-center"
+                className={`position-absolute text-center ${
+                  quantity === 0 && "d-none"
+                }  `}
                 style={{
                   top: -2,
                   left: 19,
                   backgroundColor: "#1f2562",
                   color: "white",
-                  paddin: "5px",
-                  width: "20px",
-                  fontSize: "14px",
-                  borderRadius: "10px",
+                  padding: "1px 6px",
+                  width: "25px",
+                  fontSize: "16px",
+                  borderRadius: "20px",
                 }}
               >
                 {quantity > 0 && quantity}
@@ -91,16 +115,49 @@ function NavigationBar() {
             <NavDropdown
               title={
                 <span>
-                  <FaUser size={"1.5rem"} className="pe-2" />
-                  Account
+                  {user?.name ? (
+                    <>
+                      {user.photo ? (
+                        <Image
+                          src={user.photo}
+                          roundedCircle
+                          width="30"
+                          height="30"
+                          className="me-2"
+                        />
+                      ) : (
+                        <FaUser size={"1.5rem"} className="me-2" />
+                      )}
+                      {user.name}
+                    </>
+                  ) : (
+                    <>
+                      <FaUser size={"1.5rem"} className="me-2" />
+                      Login
+                    </>
+                  )}
                 </span>
               }
               id="accountDropdown"
-              className="d-md-block"
+              align="end"
             >
-              <NavDropdown.Item href="#">Profile</NavDropdown.Item>
-              <NavDropdown.Item href="#">Settings</NavDropdown.Item>
-              <NavDropdown.Item href="#">Logout</NavDropdown.Item>
+              {user?.name ? (
+                <>
+                  <NavDropdown.Item as={Link} to="/profile">
+                    My Profile
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/userorders">
+                    My Orders
+                  </NavDropdown.Item>
+                  <NavDropdown.Item onClick={handleLogout}>
+                    Logout
+                  </NavDropdown.Item>
+                </>
+              ) : (
+                <NavDropdown.Item as={Link} to="/login">
+                  Login
+                </NavDropdown.Item>
+              )}
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

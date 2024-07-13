@@ -1,178 +1,71 @@
-import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Grid,
-  Typography,
-  Button,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  Card,
-  IconButton,
-  Rating,
-  Chip,
-} from "@mui/material";
-import { Carousel, Container } from "react-bootstrap";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useParams } from "react-router-dom";
-import base64ToImageUrl from "../utils/imageConverter";
-import { useDispatch } from "react-redux";
-import { cartActions } from "../features/cartSlice";
+import React, { useState } from "react";
+import { TextField, Button, Typography, Box } from "@mui/material";
+import { styled } from "@mui/system";
+import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 
-const ProductPage = () => {
-  const { id } = useParams();
-  const [quantity, setQuantity] = useState(1);
-  const [selectedVariant, setSelectedVariant] = useState("");
-  const [product, setProduct] = useState([]);
-  const [image, setImage] = useState([]);
+const StyledForm = styled("form")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: theme.spacing(2),
+}));
 
-  const dispatch = useDispatch();
+const SignupForm = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/products/${id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await response.json();
-
-        setProduct(data.product);
-        setImage([
-          base64ToImageUrl(data.product.image),
-          base64ToImageUrl(data.product.image),
-          base64ToImageUrl(data.product.image),
-        ]);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
-  }, [id]);
-  console.log(image);
-
-  const handleQuantityChange = (change) => {
-    setQuantity(Math.max(1, quantity + change));
-  };
-
-  const handleVariantChange = (event) => {
-    setSelectedVariant(event.target.value);
-  };
-
-  const handleAddToCart = () => {
-    dispatch(
-      cartActions.addItemToCart({
-        id: product._id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        quantity: quantity,
-      })
-    );
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle signup logic here
+    console.log("Signup:", { name, email, password, confirmPassword });
   };
 
   return (
-    <Container>
-      <Box sx={{ flexGrow: 1, p: 3 }}>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Card elevation={3}>
-              <Carousel fade>
-                {image.map((item, index) => (
-                  <Carousel.Item key={index}>
-                    <img
-                      className="d-block w-100 c-image"
-                      src={item}
-                      alt={`Slide ${index + 1}`}
-                    />
-                  </Carousel.Item>
-                ))}
-              </Carousel>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <Box
-              sx={{ display: "flex", flexDirection: "column", height: "100%" }}
-            >
-              <Typography variant="h4" gutterBottom fontWeight="bold">
-                {product.name}
-              </Typography>
-
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Rating value={4.5} precision={0.5} readOnly />
-                <Typography variant="body2" sx={{ ml: 1 }}>
-                  (150 reviews)
-                </Typography>
-              </Box>
-
-              <Typography variant="h5" color="primary" gutterBottom>
-                ${product.price}
-              </Typography>
-
-              <Chip
-                label="In Stock"
-                color="success"
-                sx={{ width: "fit-content", mb: 2 }}
-              />
-
-              <Typography variant="body1" paragraph>
-                {product.description}
-              </Typography>
-
-              <FormControl fullWidth margin="normal">
-                <InputLabel>Select Variant</InputLabel>
-                <Select
-                  value={selectedVariant}
-                  label="Select Variant"
-                  onChange={handleVariantChange}
-                >
-                  <MenuItem value="black">Black</MenuItem>
-                  <MenuItem value="silver">Silver</MenuItem>
-                  <MenuItem value="gold">Gold</MenuItem>
-                </Select>
-              </FormControl>
-
-              <Box sx={{ display: "flex", alignItems: "center", my: 2 }}>
-                <Typography variant="body1" mr={2}>
-                  Quantity:
-                </Typography>
-                <IconButton
-                  onClick={() => handleQuantityChange(-1)}
-                  size="small"
-                >
-                  <RemoveIcon />
-                </IconButton>
-                <Typography variant="body1" sx={{ mx: 2 }}>
-                  {quantity}
-                </Typography>
-                <IconButton
-                  onClick={() => handleQuantityChange(1)}
-                  size="small"
-                >
-                  <AddIcon />
-                </IconButton>
-              </Box>
-
-              <Button
-                variant="contained"
-                startIcon={<ShoppingCartIcon />}
-                size="large"
-                onClick={handleAddToCart}
-                sx={{ mt: "5" }}
-              >
-                Add to Cart
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
+    <StyledForm onSubmit={handleSubmit}>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+        <PersonAddOutlinedIcon color="primary" sx={{ mr: 1 }} />
+        <Typography variant="h5" component="h1">
+          Sign Up
+        </Typography>
       </Box>
-    </Container>
+      <TextField
+        label="Full Name"
+        fullWidth
+        required
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <TextField
+        label="Email"
+        type="email"
+        fullWidth
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <TextField
+        label="Password"
+        type="password"
+        fullWidth
+        required
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <TextField
+        label="Confirm Password"
+        type="password"
+        fullWidth
+        required
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+      <Button type="submit" variant="contained" color="primary" fullWidth>
+        Sign Up
+      </Button>
+    </StyledForm>
   );
 };
 
-export default ProductPage;
+export default SignupForm;

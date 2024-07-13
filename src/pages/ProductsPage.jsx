@@ -18,6 +18,7 @@ const ProductsPage = () => {
   const productsPerPage = 10;
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  console.log(Math.ceil(totalProducts / productsPerPage));
 
   useEffect(() => {
     if (!byPage[currentPage]) {
@@ -45,7 +46,7 @@ const ProductsPage = () => {
           </div>
         </Col>
         <Col xs="auto">
-          <Sidebar />
+          <Sidebar pageHandler={setCurrentPage} />
         </Col>
       </Row>
       {loading && (

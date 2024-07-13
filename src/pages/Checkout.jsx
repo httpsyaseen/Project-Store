@@ -1,106 +1,262 @@
-import { Container, Row, Col, Button, Card } from "react-bootstrap";
-import productImage from "../assets/product.webp";
-import { TextField } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Grid,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Box,
+  Avatar,
+  ListItemAvatar,
+} from "@mui/material";
+import base64ToImageUrl from "../utils/imageConverter";
+import { useSelector, useDispatch } from "react-redux";
+import notify from "../utils/notify";
+import EmptyCart from "../assets/empty.jpg";
+import createOrder from "../hooks/order";
 
-const Checkout = () => {
+function CheckoutForm() {
+  const { items, totalAmount } = useSelector((state) => state.cart);
+
+  const orderItems = items;
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createOrder(orderItems, totalAmount)
+      .then(() => {
+        notify("Order Placed", "success");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 3000);
+      })
+      .catch((err) => notify("Error Placing Order", "error"));
+  };
+
   return (
-    <Container className="mt-5 defualt-height">
-      <h1 className="mb-4">Checkout</h1>
-      <Row>
-        <Col md={7}>
-          <form className="d-flex justify-content-center flex-column gap-3">
-            <TextField
-              id="outlined-basic"
-              label="Name"
-              variant="outlined"
-              autoFocus={true}
-            />
-            <TextField id="outlined-basic" label="Email" variant="outlined" />
-            <TextField
-              id="outlined-basic"
-              label="Shipping Address"
-              variant="outlined"
-            />
-            <TextField id="outlined-basic" label="City" variant="outlined" />
-          </form>
-        </Col>
-        <Col
-          md={5}
-          className="d-flex justify-content-center flex-column mt-5 mt-md-0"
-        >
-          <Card>
-            <Card.Header>
-              <h4 className="mb-0">Summary</h4>
-            </Card.Header>
-            <Card.Body>
-              <div className="d-flex mb-3 gap-4 justify-content-around">
-                <img
-                  src={productImage}
-                  alt="Saleor Balance 420 Shoes"
-                  width="50px"
-                  className="mr-3"
-                  style={{ objectFit: "contain" }}
-                />
-                <div className="align-self-center">
-                  <p className="h5">Anime Adhensive Stickers</p>
-                </div>
-                <div className="align-self-center">
-                  <h6>Rs 10/-</h6>
-                </div>
-              </div>
-              <hr />
-              <div className="d-flex mb-3 gap-4 justify-content-around">
-                <img
-                  src={productImage}
-                  alt="Saleor Balance 420 Shoes"
-                  width="50px"
-                  className="mr-3"
-                  style={{ objectFit: "contain" }}
-                />
-                <div className="align-self-center">
-                  <h5>Anime Adhensive Stickers</h5>
-                </div>
-                <div className="align-self-center">
-                  <h6>Rs 10/-</h6>
-                </div>
-              </div>
-              <hr />
-              <div className="d-flex mb-3 gap-4 justify-content-around">
-                <img
-                  src={productImage}
-                  alt="Saleor Balance 420 Shoes"
-                  width="50px"
-                  style={{ objectFit: "contain" }}
-                  className="mr-3"
-                />
-                <div className="align-self-center">
-                  <h5>Anime Adhensive Stickers</h5>
-                </div>
-                <div className="align-self-center">
-                  <h6>Rs 10/-</h6>
-                </div>
-              </div>
-              <hr />
-              <div className="d-flex justify-content-between">
-                <span>Subtotal</span>
-                <span>$750.00</span>
-              </div>
-              <div className="d-flex justify-content-between">
-                <span>Shipping cost</span>
-                <span>$0.00</span>
-              </div>
-              <hr />
-              <div className="d-flex justify-content-between">
-                <strong>Total price</strong>
-                <strong>$750.00</strong>
-              </div>
-            </Card.Body>
-            <Button className="add-to-cart">Place Order</Button>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
-  );
-};
+    <Box sx={{ maxWidth: "1200px", margin: "auto", padding: "40px 20px" }}>
+      <Grid container spacing={4}>
+        {/* Checkout Information Form */}
+        <Grid item xs={12} md={7}>
+          <Paper elevation={3} sx={{ padding: "30px", borderRadius: "12px" }}>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{ fontWeight: "bold", marginBottom: "30px" }}
+            >
+              Checkout Information
+            </Typography>
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="First Name"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="Last Name"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="Email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="Phone Number"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="Address"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="City"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="State"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="Zip Code"
+                    name="zipCode"
+                    value={formData.zipCode}
+                    onChange={handleChange}
+                    variant="outlined"
+                  />
+                </Grid>
+              </Grid>
+            </form>
+          </Paper>
+        </Grid>
 
-export default Checkout;
+        {/* Order Summary */}
+        <Grid item xs={12} md={5}>
+          <Paper elevation={3} sx={{ padding: "30px", borderRadius: "12px" }}>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{ fontWeight: "bold", marginBottom: "30px" }}
+            >
+              Order Summary
+            </Typography>
+            <Paper>
+              {orderItems.length === 0 && (
+                <Box sx={{ textAlign: "center" }}>
+                  <Box
+                    component="img"
+                    src={EmptyCart}
+                    alt="Empty Cart"
+                    sx={{
+                      width: "100%",
+                      maxWidth: { xs: "200px", sm: "300px", md: "400px" },
+                      height: "auto",
+                      // mb: 2,
+                    }}
+                  />
+
+                  <Typography variant="h4">Shopping Cart is Empty!</Typography>
+                </Box>
+              )}
+            </Paper>
+            <List>
+              {orderItems.map((item, index) => (
+                <React.Fragment key={index}>
+                  <ListItem sx={{ py: 2 }}>
+                    <ListItemAvatar>
+                      <Avatar
+                        alt={item.name}
+                        src={base64ToImageUrl(item.image)}
+                        variant="square"
+                        style={{ width: 60, height: 60, marginRight: 10 }}
+                      />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Typography variant="h6">{item.name}</Typography>
+                      }
+                      secondary={`Quantity: ${item.quantity}`}
+                    />
+                    <Typography variant="h6">
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </Typography>
+                  </ListItem>
+                  {index < orderItems.length - 1 && <Divider />}
+                </React.Fragment>
+              ))}
+            </List>
+            <Divider />
+            <ListItem>
+              <ListItemText
+                primary={<Typography variant="h6">Shipping Fees</Typography>}
+              />
+              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                ${10}
+              </Typography>
+            </ListItem>
+            <Divider />
+            <ListItem>
+              <ListItemText
+                primary={<Typography variant="h5">Total</Typography>}
+              />
+              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                ${(totalAmount + 10).toFixed(2)}
+              </Typography>
+            </ListItem>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              size="large"
+              onClick={handleSubmit}
+              sx={{
+                marginTop: "20px",
+                padding: "15px",
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+                borderRadius: "8px",
+              }}
+            >
+              Place Order
+            </Button>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+}
+
+export default CheckoutForm;

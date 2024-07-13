@@ -16,6 +16,8 @@ import { cartActions } from "../features/cartSlice";
 import base64ToImageUrl from "../utils/imageConverter";
 import EmptyCart from "../assets/empty.jpg";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Cart() {
   const { items, totalAmount } = useSelector((state) => state.cart);
@@ -41,6 +43,7 @@ export default function Cart() {
                     mb: 2,
                   }}
                 />
+
                 <Typography variant="h4">Shopping Cart is Empty!</Typography>
                 <Typography variant="h6">
                   {"But it's never too late to fix it :)"}
@@ -117,12 +120,70 @@ function CartItem({ item }) {
   );
 }
 
+function OrderItem({ item, userAddress }) {
+  return (
+    <Grid container spacing={2} alignItems="center">
+      <Grid item xs={12} sm={6}>
+        <Grid container spacing={2} alignItems="center" flexWrap={"nowrap"}>
+          <Grid item>
+            <img
+              src={base64ToImageUrl(item.image)}
+              alt="Product Image"
+              width={80}
+              height={80}
+              style={{ borderRadius: "4px", objectFit: "cover" }}
+              onError={(e) => console.log(e)}
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="h6">{item.name}</Typography>
+            <Typography variant="body2" color="text.secondary">
+              Delivery Address: {userAddress}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Order Date: {new Date().toLocaleDateString()}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <Grid container justifyContent="space-between" alignItems="center">
+          <Grid item>
+            <Typography variant="body1">Quantity: {item.quantity}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6">${item.price.toFixed(2)}</Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+}
+
 function OrderSummary({ subtotal, shipping }) {
+  const navigate = useNavigate();
   const total = subtotal + shipping;
   const dispatch = useDispatch();
 
   const handleClearCart = () => {
     dispatch(cartActions.clearCart());
+  };
+
+  const checkoutHandler = () => {
+    if (subtotal < 1) {
+      toast.error("Add items in the cart first", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+    navigate("/checkout");
   };
 
   return (
@@ -155,7 +216,12 @@ function OrderSummary({ subtotal, shipping }) {
           </Typography>
         </Grid>
       </Grid>
-      <Button variant="contained" fullWidth sx={{ mt: 2 }}>
+      <Button
+        variant="contained"
+        fullWidth
+        sx={{ mt: 2 }}
+        onClick={checkoutHandler}
+      >
         Proceed to Checkout
       </Button>
       <Button variant="outlined" fullWidth sx={{ mt: 2 }}>

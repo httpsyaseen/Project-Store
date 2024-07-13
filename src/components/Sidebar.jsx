@@ -5,7 +5,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { fetchProducts } from "../features/productSlice";
 
-const Sidebar = () => {
+const Sidebar = ({ pageHandler }) => {
   const [show, setShow] = useState(false);
   const [sort, setSort] = useState("");
   const [category, setCategory] = useState("");
@@ -41,6 +41,7 @@ const Sidebar = () => {
     if (maxPrice) url += `price[lte]=${maxPrice}&`;
     if (category) url += `category=${category}&`;
     if (rating) url += `rating[gte]=${rating}&`;
+    pageHandler(1);
 
     dispatch(fetchProducts({ query: url }));
     setShow(false);
@@ -69,7 +70,7 @@ const Sidebar = () => {
       <Offcanvas
         show={show}
         onHide={handleClose}
-        placement="start"
+        placement="end"
         className={styles.offcanvas}
       >
         <Offcanvas.Header closeButton className={styles["offcanvas-header"]}>

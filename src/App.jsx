@@ -1,3 +1,13 @@
+import { ToastContainer } from "react-toastify";
+import { useSelector } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
+
 import "./App.css";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -9,18 +19,10 @@ import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Test from "./pages/Test.jsx";
+import Private from "./components/Private.jsx";
 import CartScreen from "./pages/CartScreen.jsx";
-import { Provider } from "react-redux";
-import store from "./app/store.js";
-import { ToastContainer } from "react-toastify";
-import Sidebar from "./components/Sidebar.jsx";
-
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Outlet,
-} from "react-router-dom";
+import OrderScreen from "./pages/OrderScreen.jsx";
+import ProfileScreen from "./pages/profileScreen.jsx";
 
 const Layout = () => {
   return (
@@ -42,34 +44,47 @@ const Layout = () => {
       />
 
       <ScrollToTop />
-      <Outlet />
+      <main style={{ minHeight: "45vh" }}>
+        <Outlet />
+      </main>
       <Footer />
     </>
   );
 };
 
 function App() {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
   return (
     <>
-      <Provider store={store}>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<LandingPage />} />
-              <Route path="products" index element={<ProductsPage />} />
-              <Route
-                path="product-detail/:id"
-                element={<ProductDetailsPage />}
-              />
-              <Route path="cart" element={<CartScreen />} />
-              <Route path="login" element={<Login />} />
-              <Route path="signup" element={<Signup />} />
+      <Router>
+        {/* NORMAL ROUTES */}
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<LandingPage />} />
+            <Route path="products" index element={<ProductsPage />} />
+            <Route path="product-detail/:id" element={<ProductDetailsPage />} />
+            <Route path="cart" element={<CartScreen />} />
+            <Route path="test" element={<Test />} />
+
+            {/* ONLY NO AUTH ROUTE */}
+            <Route
+              path="login"
+              element={!isAuthenticated ? <Login /> : <Navigate to="/" />}
+            />
+            <Route
+              path="signup"
+              element={!isAuthenticated ? <Signup /> : <Navigate to="/" />}
+            />
+            <Route path="userorders" element={<OrderScreen />} />
+            {/* PROTECTED ROUTES */}
+            <Route element={<Private />}>
               <Route path="checkout" element={<Checkout />} />
-              <Route path="test" element={<Test />} />
+              <Route path="profile" element={<ProfileScreen />} />
             </Route>
-          </Routes>
-        </Router>
-      </Provider>
+          </Route>
+        </Routes>
+      </Router>
     </>
   );
 }

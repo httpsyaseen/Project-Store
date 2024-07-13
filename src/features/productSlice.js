@@ -14,14 +14,16 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+const initialState = {
+  byPage: {},
+  status: "idle",
+  totalProducts: 0,
+  error: null,
+};
+
 const productSlice = createSlice({
   name: "products",
-  initialState: {
-    byPage: {},
-    status: "idle",
-    totalProducts: 0,
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder

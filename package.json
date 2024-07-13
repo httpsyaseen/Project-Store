@@ -17,6 +17,8 @@
     "@reduxjs/toolkit": "^2.2.6",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "formik": "^2.4.6",
+    "js-cookie": "^3.0.5",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",
@@ -26,7 +28,8 @@
     "react-router-dom": "^6.24.1",
     "react-toastify": "^10.0.5",
     "redux-persist": "^6.0.0",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
