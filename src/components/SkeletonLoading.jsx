@@ -7,10 +7,14 @@ const SkeletonLoading = ({ item = 4 }) => {
     <>
       {new Array(item).fill(null).map((_, i) => (
         <>
-          <Col md={4} lg={3} className="mt-5 d-flex justify-content-center p-5">
+          <Col
+            md={4}
+            lg={3}
+            className="mt-5 d-flex justify-content-center p-5 flex-column"
+          >
             <Skeleton
               variant="rectangular"
-              style={{ height: "100%", width: "100%" }}
+              style={{ height: "200px", width: "100%" }}
             />
             <Skeleton />
             <Skeleton width="60%" />

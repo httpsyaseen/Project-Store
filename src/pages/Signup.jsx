@@ -1,10 +1,23 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  Link,
+  Paper,
+  Box,
+} from "@mui/material";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signUp } from "../features/authSlice"; // Make sure this path is correct
+import notify from "../utils/notify";
+import SignupIllustration from "../assets/login.svg"; // Import your SVG
 
-const SignupForm = () => {
+export default function Signup() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,95 +31,143 @@ const SignupForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.passwordConfirm) {
-      alert("Passwords don't match");
+      notify("Passwords don't match", "error");
       return;
     }
-    dispatch(signUp(formData));
+    try {
+      await dispatch(signUp(formData)).unwrap();
+      notify("Signup successful", "success");
+      navigate("/login");
+    } catch (error) {
+      notify("Signup failed", "error");
+    }
   };
 
   return (
-    <Container>
-      <Row className="justify-content-md-center mt-5">
-        <Col md={6}>
-          <h2 className="text-center mb-4">Sign Up</h2>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formBasicName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
+    <Container maxWidth="lg">
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        justifyContent="center"
+        style={{ minHeight: "75vh" }}
+      >
+        <Grid item xs={12} md={6}>
+          <Box
+            component="img"
+            src={SignupIllustration}
+            alt="Signup"
+            sx={{ width: "100%", maxWidth: 500 }}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} sx={{ p: 4, maxWidth: 400, margin: "auto" }}>
+            <Typography component="h1" variant="h5" align="center">
+              Sign Up
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="name"
+                label="Name"
                 name="name"
-                placeholder="Enter name"
+                autoComplete="name"
+                autoFocus
                 value={formData.name}
                 onChange={handleChange}
               />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicEmail" className="mt-3">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="email"
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
                 name="email"
-                placeholder="Enter email"
+                autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
               />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicPassword" className="mt-3">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 name="password"
-                placeholder="Password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="new-password"
                 value={formData.password}
                 onChange={handleChange}
               />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicpasswordConfirm" className="mt-3">
-              <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                type="password"
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 name="passwordConfirm"
-                placeholder="Confirm Password"
+                label="Confirm Password"
+                type="password"
+                id="passwordConfirm"
                 value={formData.passwordConfirm}
                 onChange={handleChange}
               />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicPhoneNumber" className="mt-3">
-              <Form.Label>Phone Number</Form.Label>
-              <Form.Control
-                type="tel"
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 name="phoneNumber"
-                placeholder="Enter phone number"
+                label="Phone Number"
+                type="tel"
+                id="phoneNumber"
+                autoComplete="tel"
                 value={formData.phoneNumber}
                 onChange={handleChange}
               />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicAddress" className="mt-3">
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                type="text"
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 name="address"
-                placeholder="Enter address"
+                label="Address"
+                id="address"
+                autoComplete="street-address"
                 value={formData.address}
                 onChange={handleChange}
               />
-            </Form.Group>
-
-            <Button variant="primary" type="submit" className="mt-4 w-100">
-              Sign Up
-            </Button>
-          </Form>
-        </Col>
-      </Row>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign Up
+              </Button>
+              <Grid container justifyContent="flex-end">
+                <Grid item>
+                  <Link
+                    component={RouterLink}
+                    to="/login"
+                    variant="body2"
+                    sx={{
+                      textDecoration: "none",
+                      color: "primary.main",
+                      "&:hover": {
+                        color: "primary.dark",
+                      },
+                    }}
+                  >
+                    Already have an account? Log in
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
     </Container>
   );
-};
-
-export default SignupForm;
+}

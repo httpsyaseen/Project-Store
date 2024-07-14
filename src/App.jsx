@@ -23,6 +23,9 @@ import Private from "./components/Private.jsx";
 import CartScreen from "./pages/CartScreen.jsx";
 import OrderScreen from "./pages/OrderScreen.jsx";
 import ProfileScreen from "./pages/profileScreen.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/resetPassword.jsx";
+import NotFound from "./pages/Test.jsx";
 
 const Layout = () => {
   return (
@@ -69,6 +72,12 @@ function App() {
 
             {/* ONLY NO AUTH ROUTE */}
             <Route
+              path="resetPassword/:token"
+              element={
+                !isAuthenticated ? <ResetPassword /> : <Navigate to="/" />
+              }
+            />
+            <Route
               path="login"
               element={!isAuthenticated ? <Login /> : <Navigate to="/" />}
             />
@@ -76,12 +85,20 @@ function App() {
               path="signup"
               element={!isAuthenticated ? <Signup /> : <Navigate to="/" />}
             />
-            <Route path="userorders" element={<OrderScreen />} />
+            <Route
+              path="forgot-password"
+              element={
+                !isAuthenticated ? <ForgotPassword /> : <Navigate to="/" />
+              }
+            />
+
             {/* PROTECTED ROUTES */}
             <Route element={<Private />}>
+              <Route path="userorders" element={<OrderScreen />} />
               <Route path="checkout" element={<Checkout />} />
               <Route path="profile" element={<ProfileScreen />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </Router>

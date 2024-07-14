@@ -34,6 +34,7 @@ const ProductsPage = () => {
   }, [status, dispatch, byPage, currentPage, productsPerPage]);
 
   const handlePageChange = (event, page) => {
+    window.scroll(0, 0);
     setCurrentPage(page);
   };
 

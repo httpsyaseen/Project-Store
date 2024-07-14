@@ -21,6 +21,7 @@ import { useParams } from "react-router-dom";
 import base64ToImageUrl from "../utils/imageConverter";
 import { useDispatch } from "react-redux";
 import { cartActions } from "../features/cartSlice";
+import Category from "../components/landingPage/Category";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -172,6 +173,11 @@ const ProductPage = () => {
           </Grid>
         </Grid>
       </Box>
+
+      <Category
+        category={`?limit=4&category=${product.category}&`}
+        type={"Related Products"}
+      />
     </Container>
   );
 };

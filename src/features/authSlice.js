@@ -122,6 +122,29 @@ export const updatePassword = createAsyncThunk(
   }
 );
 
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async ({ credentials, token }, { rejectWithValue }) => {
+    try {
+      console.log(credentials, token);
+      const response = await axios.patch(
+        `${baseURL}/resetPassword/${token}`,
+        credentials
+      );
+      if (response.data.user.photo) {
+        localStorage.setItem("photo", response.data.user.photo);
+        delete response.data.user.photo;
+      } else {
+        localStorage.setItem("photo", null);
+      }
+      setAuthToken(response.data.token, JSON.stringify(response.data.user));
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,

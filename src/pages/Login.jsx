@@ -1,10 +1,19 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/authSlice";
-import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  Link,
+  Paper,
+  Box,
+} from "@mui/material";
 import notify from "../utils/notify";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import LoginIllustration from "../assets/login.svg";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -24,54 +33,106 @@ const LoginForm = () => {
     const result = await dispatch(login(formData));
 
     if (result.type === "auth/login/fulfilled") {
-      notify("Login Sucessfully", "success");
+      notify("Login Successful", "success");
     } else if (result.error) {
-      notify(result.payload.message, "success");
+      notify(result.payload.message, "error");
     }
   };
 
   return (
-    <Container>
-      <Row className="justify-content-md-center mt-5">
-        <Col md={6}>
-          <h2 className="text-center mb-4">Login</h2>
-          {error && <p className="text-danger text-center">{error.message}</p>}
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="email"
+    <Container maxWidth="lg">
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        justifyContent="center"
+        style={{ minHeight: "55vh" }}
+      >
+        <Grid item xs={12} md={6}>
+          <Box
+            component="img"
+            src={LoginIllustration}
+            alt="Login"
+            sx={{ width: "100%", maxWidth: 500 }}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} sx={{ p: 4, maxWidth: 400, margin: "auto" }}>
+            <Typography component="h1" variant="h5" align="center">
+              Log In
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
                 name="email"
-                placeholder="Enter email"
+                autoComplete="email"
+                autoFocus
                 value={formData.email}
                 onChange={handleChange}
-                required
               />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicPassword" className="mt-3">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 name="password"
-                placeholder="Password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
                 value={formData.password}
                 onChange={handleChange}
-                required
               />
-            </Form.Group>
-
-            <Button
-              variant="primary"
-              type="submit"
-              className="mt-4 w-100"
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : "Login"}
-            </Button>
-          </Form>
-        </Col>
-      </Row>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : "Log In"}
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link
+                    component={RouterLink}
+                    to="/forgot-password"
+                    variant="body2"
+                    sx={{
+                      textDecoration: "none",
+                      color: "primary.main",
+                      "&:hover": {
+                        color: "primary.dark",
+                      },
+                    }}
+                  >
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link
+                    component={RouterLink}
+                    to="/signup"
+                    variant="body2"
+                    sx={{
+                      textDecoration: "none",
+                      color: "primary.main",
+                      "&:hover": {
+                        color: "primary.dark",
+                      },
+                    }}
+                  >
+                    {" Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
     </Container>
   );
 };

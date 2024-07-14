@@ -12,7 +12,7 @@ const Main = () => {
         <main>
           <Category />
           <Information />
-          <Category />
+          <Category type="Top Categories " category="?limit=4" />
           <Welcome />
         </main>
       </div>
