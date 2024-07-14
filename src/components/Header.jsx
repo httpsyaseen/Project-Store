@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/authSlice";
+import base64ToImageUrl from "../utils/imageConverter";
 
 const Header = ({ message }) => {
   return (
@@ -26,7 +27,8 @@ const Header = ({ message }) => {
 
 function NavigationBar() {
   const quantity = useSelector((state) => state.cart.totalQuantity);
-  const user = useSelector((state) => state.auth.user);
+  const { user, photo } = useSelector((state) => state.auth);
+  console.log(photo);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -115,15 +117,16 @@ function NavigationBar() {
             <NavDropdown
               title={
                 <span>
-                  {user?.name ? (
+                  {user && user.name ? (
                     <>
-                      {user.photo ? (
+                      {photo && photo !== "null" ? (
                         <Image
-                          src={user.photo}
+                          src={base64ToImageUrl(photo)}
                           roundedCircle
                           width="30"
                           height="30"
-                          className="me-2"
+                          className="me-2 object-fit-cover"
+                          alt="User Avatar"
                         />
                       ) : (
                         <FaUser size={"1.5rem"} className="me-2" />
@@ -141,7 +144,7 @@ function NavigationBar() {
               id="accountDropdown"
               align="end"
             >
-              {user?.name ? (
+              {user ? (
                 <>
                   <NavDropdown.Item as={Link} to="/profile">
                     My Profile

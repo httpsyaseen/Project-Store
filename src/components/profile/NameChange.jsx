@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { updateName } from "../../features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { updateInfo } from "../../features/authSlice";
 import notify from "../../utils/notify";
 
 const NameChange = () => {
   const [name, setName] = useState("");
   const dispatch = useDispatch();
-
+  const currentName = useSelector((state) => state.auth.user.name);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await dispatch(updateName({ name }));
+    const result = await dispatch(updateInfo({ name }));
     if (result.type.includes("fulfilled"))
       notify("Name updated Successfully", "success");
   };
@@ -19,6 +19,9 @@ const NameChange = () => {
     <Box>
       <Typography variant="h5" gutterBottom>
         Change Name
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Current Name: {currentName}
       </Typography>
       <form onSubmit={handleSubmit}>
         <TextField

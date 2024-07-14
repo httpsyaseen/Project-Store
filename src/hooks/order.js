@@ -22,7 +22,7 @@ const createOrder = async (items, totalAmount) => {
 
   const res = await axios.post(url, data, config);
   if (res.data.status === "success") {
-    localStorage.clear();
+    localStorage.setItem("cart", "");
   }
   return res.data;
 };

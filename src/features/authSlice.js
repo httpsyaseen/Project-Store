@@ -8,7 +8,8 @@ const initialState = {
   isAuthenticated: !!Cookies.get("token"),
   loading: false,
   error: null,
-  user: (Cookies.get("user") ?? {}) || JSON.parse(Cookies.get("user")),
+  user: (Cookies.get("user") && JSON.parse(Cookies.get("user"))) || "",
+  photo: (Cookies.get("user") && localStorage.getItem("photo")) || "",
 };
 
 const setAuthToken = (token, user) => {
@@ -25,7 +26,14 @@ export const signUp = createAsyncThunk(
   `auth/signUp`,
   async (userData, { rejectWithValue }) => {
     try {
+      console.log(userData);
       const response = await axios.post(`${baseURL}/signUp`, userData);
+      if (response.data.user.photo) {
+        localStorage.setItem("photo", response.data.user.photo);
+        delete response.data.user.photo;
+      } else {
+        localStorage.setItem("photo", null);
+      }
       setAuthToken(response.data.token, JSON.stringify(response.data.user));
 
       return response.data;
@@ -40,7 +48,12 @@ export const login = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${baseURL}/login`, credentials);
-      console.log(response.data);
+      if (response.data.user.photo) {
+        localStorage.setItem("photo", response.data.user.photo);
+        delete response.data.user.photo;
+      } else {
+        localStorage.setItem("photo", null);
+      }
       setAuthToken(response.data.token, JSON.stringify(response.data.user));
       return response.data;
     } catch (error) {
@@ -49,8 +62,8 @@ export const login = createAsyncThunk(
   }
 );
 
-export const updateName = createAsyncThunk(
-  "auth/updateName",
+export const updateInfo = createAsyncThunk(
+  "auth/updateInfo",
   async (credentials, { rejectWithValue, getState }) => {
     try {
       const { auth } = getState();
@@ -65,7 +78,13 @@ export const updateName = createAsyncThunk(
         credentials,
         config
       );
-      setAuthToken(response.data.token, JSON.stringify(response.data.user));
+      if (response.data.user.photo) {
+        localStorage.setItem("photo", response.data.user.photo);
+        delete response.data.user.photo;
+      } else {
+        localStorage.setItem("photo", null);
+      }
+      setAuthToken(auth.token, JSON.stringify(response.data.user));
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -89,6 +108,12 @@ export const updatePassword = createAsyncThunk(
         credentials,
         config
       );
+      if (response.data.user.photo) {
+        localStorage.setItem("photo", response.data.user.photo);
+        delete response.data.user.photo;
+      } else {
+        localStorage.setItem("photo", null);
+      }
       setAuthToken(response.data.token, JSON.stringify(response.data.user));
       return response.data;
     } catch (error) {
@@ -128,6 +153,7 @@ const authSlice = createSlice({
           }
           if (action.payload.user) {
             state.user = action.payload.user;
+            state.photo = localStorage.getItem("photo");
           }
         }
       )

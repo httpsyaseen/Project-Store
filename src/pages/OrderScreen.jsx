@@ -158,7 +158,7 @@ function OrderItem({ order }) {
           <Divider sx={{ my: 2 }} />
           <Grid container justifyContent="space-between" alignItems="center">
             <Grid item>
-              <Typography variant="h5">Total</Typography>
+              <Typography variant="h5">To be Paid</Typography>
             </Grid>
             <Grid item>
               <Typography variant="h6" color="black">

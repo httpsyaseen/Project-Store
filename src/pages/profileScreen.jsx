@@ -12,23 +12,25 @@ import {
   Divider,
   Box,
 } from "@mui/material";
+import { useSelector } from "react-redux";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import EmailIcon from "@mui/icons-material/Email";
 import HomeIcon from "@mui/icons-material/Home";
 import PhoneIcon from "@mui/icons-material/Phone";
 import profileImage from "../assets/profile.svg";
+import base64ToImageUrl from "../utils/imageConverter";
 
 // Import components for each section (to be created)
 import NameChange from "../components/profile/NameChange";
 import PasswordChange from "../components/profile/PasswordChange";
 import AddressChange from "../components/profile/AddressChange";
 import PhoneChange from "../components/profile/PhoneChange";
-// import PhotoChange from './profile/PhotoChange';
+import PhotoChange from "../components//profile/PhotoChange";
 
 const MyProfile = () => {
   const [selectedOption, setSelectedOption] = useState("");
+  const { user, photo } = useSelector((state) => state.auth);
 
   const profileOptions = [
     { label: "Change Name", icon: <PersonIcon />, value: "name" },
@@ -48,6 +50,8 @@ const MyProfile = () => {
         return <AddressChange />;
       case "phone":
         return <PhoneChange />;
+      case "photo":
+        return <PhotoChange />;
       default:
         return (
           <Box
@@ -84,12 +88,12 @@ const MyProfile = () => {
               >
                 <Avatar
                   sx={{ width: 120, height: 120, mb: 2 }}
-                  src="/path-to-profile-image.jpg"
+                  src={base64ToImageUrl(photo)}
                   alt="Profile"
                 />
-                <Typography variant="h6">John Doe</Typography>
+                <Typography variant="h6">{user.name}</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  john.doe@example.com
+                  {user.email}
                 </Typography>
               </Box>
               <Divider sx={{ my: 2 }} />
