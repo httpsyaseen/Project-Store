@@ -63,7 +63,7 @@ export default function Orders() {
       <Grid container spacing={4}>
         <Grid item xs={12}>
           {loading && <Loading />}
-          {orders.length === 0 ? (
+          {!loading && orders.length === 0 ? (
             <Box sx={{ textAlign: "center" }}>
               <Box
                 component="img"
@@ -114,6 +114,13 @@ function OrderItem({ order }) {
           <Chip
             label={order.shipped ? "Shipped" : "Not Shipped"}
             color={order.shipped ? "success" : "warning"}
+            sx={{ mt: 1, mr: 1 }}
+          />
+          <Chip
+            label={
+              order.status === "delivered" ? "Delivered" : "Not Delivered yet"
+            }
+            color={order.status === "delivered" ? "success" : "warning"}
             sx={{ mt: 1 }}
           />
         </Grid>

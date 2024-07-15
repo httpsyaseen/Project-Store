@@ -17,7 +17,7 @@ import base64ToImageUrl from "../utils/imageConverter";
 import { useSelector, useDispatch } from "react-redux";
 import notify from "../utils/notify";
 import EmptyCart from "../assets/empty.jpg";
-import createOrder from "../hooks/order";
+import { createOrder } from "../utils/api";
 
 function CheckoutForm() {
   const { items, totalAmount } = useSelector((state) => state.cart);
@@ -43,6 +43,7 @@ function CheckoutForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     createOrder(orderItems, totalAmount)
       .then(() => {
         notify("Order Placed", "success");

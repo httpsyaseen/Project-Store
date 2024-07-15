@@ -43,7 +43,9 @@ const Layout = () => {
         theme="light"
       />
       <Header
-        message={"Free Shipping over the order of Rs 2000/- and above."}
+        message={
+          "Portfolio project: All Orders will be marked delivered within hour 😎."
+        }
       />
 
       <ScrollToTop />

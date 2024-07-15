@@ -99,9 +99,14 @@ const ProductCard = ({ product }) => {
               {product.name}
             </ProductName>
             <Box display="flex" alignItems="center" mb={1}>
-              <Rating value={4} readOnly size="small" />
+              <Rating
+                value={product.rating || 4.5}
+                precision={0.5}
+                readOnly
+                size="small"
+              />
               <Typography variant="body2" color="text.secondary" ml={1}>
-                (67)
+                ({product.totalRatings || 48})
               </Typography>
             </Box>
             <Box display="flex" alignItems="baseline" mb={1}>

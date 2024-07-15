@@ -10,14 +10,14 @@ import {
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/authSlice";
 import base64ToImageUrl from "../utils/imageConverter";
 
 const Header = ({ message }) => {
   return (
-    <header>
+    <header className="w-100">
       {message ? <Disclaimer message={message} /> : <></>}
       <NavigationBar />
       <Categories />
@@ -28,7 +28,7 @@ const Header = ({ message }) => {
 function NavigationBar() {
   const quantity = useSelector((state) => state.cart.totalQuantity);
   const { user, photo } = useSelector((state) => state.auth);
-  console.log(photo);
+  const [expanded, setExpanded] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -40,7 +40,7 @@ function NavigationBar() {
       expand="md"
       bg="light"
       variant="light"
-      className="shadow  sticky-top"
+      className="shadow sticky-top"
     >
       <Container fluid>
         <LinkContainer to={"/"}>
@@ -51,7 +51,10 @@ function NavigationBar() {
             />
           </Navbar.Brand>
         </LinkContainer>
-        <Navbar.Toggle aria-controls="navbarNav" />
+        <Navbar.Toggle
+          aria-controls="navbarNav"
+          onClick={() => setExpanded(!expanded)}
+        />
         <Navbar.Collapse id="navbarNav">
           <Nav className="me-auto">
             <LinkContainer to={"/"}>

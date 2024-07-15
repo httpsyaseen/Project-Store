@@ -18,7 +18,6 @@ const ProductsPage = () => {
   const productsPerPage = 10;
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log(Math.ceil(totalProducts / productsPerPage));
 
   useEffect(() => {
     if (!byPage[currentPage]) {
@@ -52,7 +51,7 @@ const ProductsPage = () => {
       </Row>
       {loading && (
         <>
-          <Row>
+          <Row className="justify-content-center">
             <SkeletonLoading />
           </Row>
         </>

@@ -120,46 +120,6 @@ function CartItem({ item }) {
   );
 }
 
-function OrderItem({ item, userAddress }) {
-  return (
-    <Grid container spacing={2} alignItems="center">
-      <Grid item xs={12} sm={6}>
-        <Grid container spacing={2} alignItems="center" flexWrap={"nowrap"}>
-          <Grid item>
-            <img
-              src={base64ToImageUrl(item.image)}
-              alt="Product Image"
-              width={80}
-              height={80}
-              style={{ borderRadius: "4px", objectFit: "cover" }}
-              onError={(e) => console.log(e)}
-            />
-          </Grid>
-          <Grid item>
-            <Typography variant="h6">{item.name}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Delivery Address: {userAddress}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Order Date: {new Date().toLocaleDateString()}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <Grid container justifyContent="space-between" alignItems="center">
-          <Grid item>
-            <Typography variant="body1">Quantity: {item.quantity}</Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6">${item.price.toFixed(2)}</Typography>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
-  );
-}
-
 function OrderSummary({ subtotal, shipping }) {
   const navigate = useNavigate();
   const total = subtotal + shipping;
@@ -224,7 +184,12 @@ function OrderSummary({ subtotal, shipping }) {
       >
         Proceed to Checkout
       </Button>
-      <Button variant="outlined" fullWidth sx={{ mt: 2 }}>
+      <Button
+        variant="outlined"
+        fullWidth
+        sx={{ mt: 2 }}
+        onClick={() => navigate("/products")}
+      >
         Continue Shopping
       </Button>
       <Button

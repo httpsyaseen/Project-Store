@@ -3,7 +3,11 @@ import ProductCard from "../ProductCard";
 import { useEffect, useState } from "react";
 import SkeletonLoading from "../SkeletonLoading";
 
-const Category = ({ category = "/trending", type = "Trending Products" }) => {
+const Category = ({
+  category = "/trending",
+  type = "Trending Products",
+  id = "",
+}) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +23,8 @@ const Category = ({ category = "/trending", type = "Trending Products" }) => {
             throw new Error("Failed to fetch products");
           }
           const data = await response.json();
-          setProducts(data.products);
+          const products = data.products.filter((p) => p._id != id);
+          setProducts(products);
         } catch (error) {
           console.error("Error fetching products:", error);
         } finally {
@@ -29,17 +34,19 @@ const Category = ({ category = "/trending", type = "Trending Products" }) => {
 
       fetchProducts();
     },
-    [category]
+    [category, id]
   );
 
   return (
     <>
       <Container>
-        <div className="category-header pt-4">
-          <span className="line"></span>
-          <p className="text-center mx-4 h2">{type}</p>
-          <span className="line"></span>
-        </div>
+        {products.length > 0 && (
+          <div className="category-header pt-4">
+            <span className="line"></span>
+            <p className="text-center mx-4 h2">{type}</p>
+            <span className="line"></span>
+          </div>
+        )}
         {loading && (
           <>
             <Row>

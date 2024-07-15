@@ -99,6 +99,7 @@ export default function Signup() {
                 name="password"
                 label="Password"
                 type="password"
+                inputProps={{ minLength: 8 }}
                 id="password"
                 autoComplete="new-password"
                 value={formData.password}
@@ -111,6 +112,7 @@ export default function Signup() {
                 name="passwordConfirm"
                 label="Confirm Password"
                 type="password"
+                inputProps={{ minLength: 8 }}
                 id="passwordConfirm"
                 value={formData.passwordConfirm}
                 onChange={handleChange}
@@ -138,6 +140,7 @@ export default function Signup() {
                 value={formData.address}
                 onChange={handleChange}
               />
+
               <Button
                 type="submit"
                 fullWidth

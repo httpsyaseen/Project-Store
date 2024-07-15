@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Offcanvas, Form, Col, Row } from "react-bootstrap";
+import { Offcanvas, Form, Col, Row } from "react-bootstrap";
+import { Button } from "@mui/material";
 import styles from "./sidebar.module.css";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -60,8 +61,8 @@ const Sidebar = ({ pageHandler }) => {
   return (
     <>
       <Button
-        variant="primary"
-        className="mx-auto d-block my-3"
+        variant="contained"
+        // className="mx-auto d-block my-3"
         onClick={handleShow}
       >
         Filter Products
@@ -160,7 +161,7 @@ const Sidebar = ({ pageHandler }) => {
             </Form.Group>
 
             <Button
-              variant="primary"
+              variant="contained"
               type="submit"
               className={styles["apply-filters-btn"]}
             >
@@ -168,7 +169,8 @@ const Sidebar = ({ pageHandler }) => {
             </Button>
           </Form>
           <Button
-            variant="dark"
+            variant="outlined"
+            sx={{ mt: 2 }}
             onClick={clearAllStates}
             className={styles["apply-filters-btn"]}
           >
