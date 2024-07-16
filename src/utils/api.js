@@ -24,7 +24,12 @@ export const createOrder = async (items, totalAmount) => {
     totalCost: Math.trunc(totalAmount),
   };
 
-  const res = await axios.post(url, data, config);
+  const res = await axios.post(url, data, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  });
   if (res.data.status === "success") {
     localStorage.setItem("cart", "");
   }
@@ -35,7 +40,12 @@ export const isUserAllowed = async (productId) => {
   const url = `${baseURL}api/v1/purchases/review-allowed/${productId}`;
 
   try {
-    const { data } = await axios.get(url, config);
+    const { data } = await axios.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    });
 
     return data.allowed || false;
   } catch (err) {
@@ -55,14 +65,24 @@ export const getReviews = async (productId) => {
 
 export const submitReview = async (data) => {
   const url = `${baseURL}api/v1/reviews/`;
-  const res = await axios.post(url, data, config);
+  const res = await axios.post(url, data, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  });
   return res.data;
 };
 
 export const getOrders = async () => {
   const url = `${baseURL}api/v1/orders/getUserOrders`;
   console.log(config);
-  const res = await axios.get(url, config);
+  const res = await axios.get(url, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  });
   return res.data?.orders;
 };
 
