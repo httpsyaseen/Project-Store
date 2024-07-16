@@ -1,8 +1,7 @@
-import { lazy } from "react";
 import Information from "../components/landingPage/Information";
 import Welcome from "../components/landingPage/Welcome";
 import Category from "../components/landingPage/Category";
-const Slider = lazy(() => import("../components/landingPage/Slider"));
+import Slider from "../components/landingPage/Slider";
 
 const Main = () => {
   return (
