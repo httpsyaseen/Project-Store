@@ -42,7 +42,7 @@ export default function Signup() {
       notify("Signup successful", "success");
       navigate("/login");
     } catch (error) {
-      notify("Signup failed", "error");
+      notify("Email is already taken or Signup failed", "error");
     }
   };
 

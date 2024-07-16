@@ -4,7 +4,8 @@ import { Button } from "@mui/material";
 import styles from "./sidebar.module.css";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { fetchProducts } from "../features/productSlice";
+import { fetchProducts } from "../../features/productSlice";
+import { baseURL } from "../../constant";
 
 const Sidebar = ({ pageHandler }) => {
   const [show, setShow] = useState(false);
@@ -18,7 +19,7 @@ const Sidebar = ({ pageHandler }) => {
 
   useEffect(function () {
     async function fetchCategories() {
-      const res = await axios.get("http://localhost:3000/products/categories");
+      const res = await axios.get(`${baseURL}products/categories`);
       setCategories(res.data.categories);
     }
     fetchCategories();

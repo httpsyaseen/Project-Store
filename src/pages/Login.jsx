@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../features/authSlice";
 import {
   Container,
   Typography,
@@ -11,8 +10,9 @@ import {
   Paper,
   Box,
 } from "@mui/material";
-import notify from "../utils/notify";
 import { Link as RouterLink } from "react-router-dom";
+import notify from "../utils/notify";
+import { login } from "../features/authSlice";
 import LoginIllustration from "../assets/login.svg";
 
 const LoginForm = () => {

@@ -12,7 +12,8 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 import notify from "../utils/notify";
-import ForgotPasswordImage from "../assets/forgot.svg"; // Make sure to add this image to your assets folder
+import ForgotPasswordImage from "../assets/forgot.svg";
+import { baseURL } from "../constant";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ export default function ForgotPassword() {
     e.preventDefault();
     try {
       setLoading(true);
-      const url = "http://localhost:3000/api/v1/users/forgot";
+      const url = `${baseURL}api/v1/users/forgot`;
       await axios.post(url, { email });
       notify("Password reset Link sent to your email", "success");
       setLoading(false);

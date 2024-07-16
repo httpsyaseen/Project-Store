@@ -1,13 +1,16 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { baseURL } from "../constant";
 
-const token = `Bearer ${Cookies.get("token")}`;
 const config = {
-  headers: { "Content-Type": "application/json", Authorization: token },
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${Cookies.get("token")}`,
+  },
 };
 
 export const createOrder = async (items, totalAmount) => {
-  const url = "http://localhost:3000/api/v1/orders/";
+  const url = `${baseURL}api/v1/orders/`;
 
   const products = items.map((item) => {
     return {
@@ -29,11 +32,11 @@ export const createOrder = async (items, totalAmount) => {
 };
 
 export const isUserAllowed = async (productId) => {
-  const url = `http://localhost:3000/api/v1/purchases/review-allowed/${productId}`;
+  const url = `${baseURL}api/v1/purchases/review-allowed/${productId}`;
 
   try {
     const { data } = await axios.get(url, config);
-    console.log(data);
+
     return data.allowed || false;
   } catch (err) {
     return false;
@@ -42,7 +45,7 @@ export const isUserAllowed = async (productId) => {
 
 export const getReviews = async (productId) => {
   try {
-    const url = `http://localhost:3000/api/v1/reviews/${productId}`;
+    const url = `${baseURL}api/v1/reviews/${productId}`;
     const { data } = await axios.get(url);
     return data.reviews;
   } catch (err) {
@@ -51,12 +54,20 @@ export const getReviews = async (productId) => {
 };
 
 export const submitReview = async (data) => {
-  const url = "http://localhost:3000/api/v1/reviews/";
-  try {
-    const res = await axios.post(url, data, config);
-    return res.data;
-  } catch (err) {
-    console.log(err.message);
-    throw err.message;
-  }
+  const url = `${baseURL}api/v1/reviews/`;
+  const res = await axios.post(url, data, config);
+  return res.data;
+};
+
+export const getOrders = async () => {
+  const url = `${baseURL}api/v1/orders/getUserOrders`;
+  console.log(config);
+  const res = await axios.get(url, config);
+  return res.data?.orders;
+};
+
+export const getProductDetails = async (id) => {
+  const url = `${baseURL}api/v1/products/${id}`;
+  const res = await axios.get(url);
+  return res.data?.product;
 };

@@ -14,8 +14,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { cartActions } from "../features/cartSlice";
-import base64ToImageUrl from "../utils/imageConverter";
+import { cartActions } from "../../features/cartSlice";
+import base64ToImageUrl from "../../utils/imageConverter";
 ///////////////
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

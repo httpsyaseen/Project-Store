@@ -1,8 +1,8 @@
 import { Container, Row } from "react-bootstrap";
-import ProductCard from "../ProductCard";
+import ProductCard from "../general/ProductCard";
 import { useEffect, useState } from "react";
-import SkeletonLoading from "../SkeletonLoading";
-
+import SkeletonLoading from "../general/SkeletonLoading";
+import { baseURL } from "../../constant";
 const Category = ({
   category = "/trending",
   type = "Trending Products",
@@ -16,9 +16,7 @@ const Category = ({
       const fetchProducts = async () => {
         try {
           setLoading(true);
-          const response = await fetch(
-            `http://localhost:3000/products${category}`
-          );
+          const response = await fetch(`${baseURL}api/v1/products${category}`);
           if (!response.ok) {
             throw new Error("Failed to fetch products");
           }

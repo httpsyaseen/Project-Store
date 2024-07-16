@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Dropdown } from "react-bootstrap";
 import { Pagination, Button } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import ProductCard from "../components/ProductCard";
 import { fetchProducts } from "../features/productSlice";
-import Sidebar from "../components/Sidebar";
-import SkeletonLoading from "../components/SkeletonLoading";
+import ProductCard from "../components/general/ProductCard";
+import Sidebar from "../components/general/Sidebar";
+import SkeletonLoading from "../components/general/SkeletonLoading";
 
 const ProductsPage = () => {
   const dispatch = useDispatch();

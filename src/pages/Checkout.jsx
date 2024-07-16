@@ -13,8 +13,8 @@ import {
   Avatar,
   ListItemAvatar,
 } from "@mui/material";
-import base64ToImageUrl from "../utils/imageConverter";
 import { useSelector, useDispatch } from "react-redux";
+import base64ToImageUrl from "../utils/imageConverter";
 import notify from "../utils/notify";
 import EmptyCart from "../assets/empty.jpg";
 import { createOrder } from "../utils/api";
@@ -23,6 +23,7 @@ function CheckoutForm() {
   const { items, totalAmount } = useSelector((state) => state.cart);
 
   const orderItems = items;
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -43,15 +44,19 @@ function CheckoutForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setLoading(true);
     createOrder(orderItems, totalAmount)
       .then(() => {
         notify("Order Placed", "success");
         setTimeout(() => {
           window.location.href = "/";
         }, 3000);
+        setLoading(false);
       })
-      .catch((err) => notify("Error Placing Order", "error"));
+      .catch((err) => {
+        notify("Error Placing Order", "error");
+        setLoading(false);
+      });
   };
 
   return (
@@ -243,6 +248,7 @@ function CheckoutForm() {
               fullWidth
               size="large"
               onClick={handleSubmit}
+              disabled={loading}
               sx={{
                 marginTop: "20px",
                 padding: "15px",
@@ -251,7 +257,7 @@ function CheckoutForm() {
                 borderRadius: "8px",
               }}
             >
-              Place Order
+              {loading ? "Placing Order..." : "Place Order"}
             </Button>
           </Paper>
         </Grid>

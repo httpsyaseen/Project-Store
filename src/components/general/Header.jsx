@@ -12,8 +12,9 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../features/authSlice";
-import base64ToImageUrl from "../utils/imageConverter";
+import { logout } from "../../features/authSlice";
+import { cartActions } from "../../features/cartSlice";
+import base64ToImageUrl from "../../utils/imageConverter";
 
 const Header = ({ message }) => {
   return (
@@ -32,7 +33,9 @@ function NavigationBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
-    dispatch(logout()).then(() => navigate("/"));
+    dispatch(logout());
+    dispatch(cartActions.clearCart());
+    navigate("/login");
   };
 
   return (

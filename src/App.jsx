@@ -9,9 +9,9 @@ import {
 } from "react-router-dom";
 
 import "./App.css";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import ScrollToTop from "./components/Scroll";
+import Footer from "./components/general/Footer";
+import Header from "./components/general/Header";
+import ScrollToTop from "./components/general/Scroll";
 import LandingPage from "./pages/LandingPage";
 import ProductsPage from "./pages/ProductsPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
@@ -19,7 +19,7 @@ import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Test from "./pages/Test.jsx";
-import Private from "./components/Private.jsx";
+import Private from "./components/general/Private.jsx";
 import CartScreen from "./pages/CartScreen.jsx";
 import OrderScreen from "./pages/OrderScreen.jsx";
 import ProfileScreen from "./pages/profileScreen.jsx";

@@ -12,10 +12,10 @@ import {
   Divider,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import { isUserAllowed, getReviews, submitReview } from "../utils/api";
-import base64ToImageUrl from "../utils/imageConverter";
-import notify from "../utils/notify";
-import NoReview from "../assets/review.svg";
+import { isUserAllowed, getReviews, submitReview } from "../../utils/api";
+import base64ToImageUrl from "../../utils/imageConverter";
+import notify from "../../utils/notify";
+import NoReview from "../../assets/review.svg";
 
 const ReviewSection = styled(Box)(({ theme }) => ({
   margin: "0 auto",

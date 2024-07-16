@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { baseURL } from "../constant";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
@@ -7,7 +8,7 @@ export const fetchProducts = createAsyncThunk(
     const { product } = getState();
     if (product.byPage[page] && !query && !clear) return null;
     const res = await axios.get(
-      `http://localhost:3000/products?${query}page=${page}&limit=${limit}`
+      `${baseURL}api/v1/products?${query}page=${page}&limit=${limit}`
     );
 
     return { page, data: res.data, query };

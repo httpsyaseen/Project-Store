@@ -12,12 +12,12 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useSelector, useDispatch } from "react-redux";
-import { cartActions } from "../features/cartSlice";
-import base64ToImageUrl from "../utils/imageConverter";
-import EmptyCart from "../assets/empty.jpg";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import notify from "../utils/notify";
+import EmptyCart from "../assets/empty.jpg";
+import base64ToImageUrl from "../utils/imageConverter";
+import { cartActions } from "../features/cartSlice";
 
 export default function Cart() {
   const { items, totalAmount } = useSelector((state) => state.cart);
@@ -131,16 +131,7 @@ function OrderSummary({ subtotal, shipping }) {
 
   const checkoutHandler = () => {
     if (subtotal < 1) {
-      toast.error("Add items in the cart first", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      notify("Add items in the cart first", "error");
       return;
     }
     navigate("/checkout");

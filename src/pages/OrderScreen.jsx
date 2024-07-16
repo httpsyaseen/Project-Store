@@ -10,37 +10,28 @@ import {
   Chip,
   Skeleton,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import base64ToImageUrl from "../utils/imageConverter";
 import EmptyOrders from "../assets/empty.jpg";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import Cookies from "js-cookie";
 import notify from "../utils/notify";
+import { getOrders } from "../utils/api";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
-    async function getOrders() {
-      try {
-        setLoading(true);
-        const token = `Bearer ${Cookies.get("token")}`;
-        const config = {
-          headers: { "Content-Type": "application/json", Authorization: token },
-        };
-        const url = "http://localhost:3000/api/v1/orders/getUserOrders";
-
-        const res = await axios.get(url, config);
+    setLoading(true);
+    getOrders()
+      .then((orders) => {
+        setOrders(orders);
         setLoading(false);
-        setOrders(res.data.orders);
-      } catch (error) {
+      })
+      .catch((err) => {
+        console.log(err.message);
         notify("Error getting your Orders", "error");
         setLoading(false);
-      }
-    }
-
-    getOrders();
+      });
   }, []);
 
   function Loading() {
@@ -165,7 +156,9 @@ function OrderItem({ order }) {
           <Divider sx={{ my: 2 }} />
           <Grid container justifyContent="space-between" alignItems="center">
             <Grid item>
-              <Typography variant="h5">To be Paid</Typography>
+              <Typography variant="h5">
+                {order.status !== "delivered" && "To be"} Paid
+              </Typography>
             </Grid>
             <Grid item>
               <Typography variant="h6" color="black">

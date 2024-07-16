@@ -18,11 +18,13 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useParams } from "react-router-dom";
-import base64ToImageUrl from "../utils/imageConverter";
 import { useDispatch } from "react-redux";
+import base64ToImageUrl from "../utils/imageConverter";
 import { cartActions } from "../features/cartSlice";
 import Category from "../components/landingPage/Category";
-import Review from "../components/Review";
+import Review from "../components/general/Review";
+import { getProductDetails } from "../utils/api";
+import notify from "../utils/notify";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -34,26 +36,18 @@ const ProductPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/products/${id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await response.json();
-
-        setProduct(data.product);
+    getProductDetails(id)
+      .then((p) => {
+        setProduct(p);
         setImage([
-          base64ToImageUrl(data.product.image),
-          base64ToImageUrl(data.product.image),
-          base64ToImageUrl(data.product.image),
+          base64ToImageUrl(p.image),
+          base64ToImageUrl(p.image),
+          base64ToImageUrl(p.image),
         ]);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
+      })
+      .catch((err) => {
+        notify("Error getting product", "error");
+      });
   }, [id]);
 
   const handleQuantityChange = (change) => {
@@ -64,8 +58,6 @@ const ProductPage = () => {
   const handleVariantChange = (event) => {
     setSelectedVariant(event.target.value);
   };
-
-  console.log(product.rating);
 
   const handleAddToCart = () => {
     dispatch(

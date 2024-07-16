@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
-const baseURL = "http://127.0.0.1:3000/api/v1/users";
+import { baseURL } from "../constant";
 
 const initialState = {
   token: Cookies.get("token") || "",
@@ -27,7 +27,10 @@ export const signUp = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       console.log(userData);
-      const response = await axios.post(`${baseURL}/signUp`, userData);
+      const response = await axios.post(
+        `${baseURL}api/v1/users/signUp`,
+        userData
+      );
       if (response.data.user.photo) {
         localStorage.setItem("photo", response.data.user.photo);
         delete response.data.user.photo;
@@ -47,7 +50,10 @@ export const login = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${baseURL}/login`, credentials);
+      const response = await axios.post(
+        `${baseURL}api/v1/users/login`,
+        credentials
+      );
       if (response.data.user.photo) {
         localStorage.setItem("photo", response.data.user.photo);
         delete response.data.user.photo;
@@ -74,7 +80,7 @@ export const updateInfo = createAsyncThunk(
         },
       };
       const response = await axios.patch(
-        `${baseURL}/updateUser`,
+        `${baseURL}api/v1/users/updateUser`,
         credentials,
         config
       );
@@ -104,7 +110,7 @@ export const updatePassword = createAsyncThunk(
     };
     try {
       const response = await axios.patch(
-        `${baseURL}/updatePassword`,
+        `${baseURL}api/v1/users/updatePassword`,
         credentials,
         config
       );
@@ -128,7 +134,7 @@ export const resetPassword = createAsyncThunk(
     try {
       console.log(credentials, token);
       const response = await axios.patch(
-        `${baseURL}/resetPassword/${token}`,
+        `${baseURL}api/v1/users/resetPassword/${token}`,
         credentials
       );
       if (response.data.user.photo) {
