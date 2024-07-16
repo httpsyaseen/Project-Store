@@ -165,7 +165,9 @@ const ProductReviews = ({ productId = "668ae1e8807f117cb412166a" }) => {
                 sx={{ marginBottom: 2 }}
               >
                 <Avatar
-                  src={base64ToImageUrl(review.user.photo)}
+                  src={
+                    review.user?.photo && base64ToImageUrl(review.user.photo)
+                  }
                   alt={review.user.name}
                 />
                 <Typography variant="h6">{review.user.name}</Typography>
