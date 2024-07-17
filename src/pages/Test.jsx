@@ -1,164 +1,81 @@
-import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Card,
-  CardContent,
-  Avatar,
-  Rating,
-  Stack,
-  Divider,
-} from "@mui/material";
-import { styled } from "@mui/system";
-import { isUserAllowed, getReviews, submitReview } from "../utils/api";
-import base64ToImageUrl from "../utils/imageConverter";
-import notify from "../utils/notify";
+import React, { useEffect, useState } from "react";
+import { Container, Row, Col, Dropdown } from "react-bootstrap";
+import { Pagination, Button } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchProducts } from "../features/productSlice";
+import ProductCard from "../components/general/ProductCard";
+import Sidebar from "../components/general/Sidebar";
+import SkeletonLoading from "../components/general/SkeletonLoading";
 
-const ReviewSection = styled(Box)(({ theme }) => ({
-  maxWidth: 800,
-  margin: "0 auto",
-  padding: theme.spacing(4),
-}));
-
-const ReviewForm = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-}));
-
-const ReviewList = styled(Box)(({ theme }) => ({
-  "& > *:not(:last-child)": {
-    marginBottom: theme.spacing(2),
-  },
-}));
-
-const ReviewCard = styled(Card)(({ theme }) => ({
-  backgroundColor: "#fff",
-}));
-
-const fakeReviews = [
-  {
-    id: 1,
-    name: "John Doe",
-    avatar: "https://i.pravatar.cc/150?img=1",
-    rating: 4,
-    text: "Great product! I really enjoyed using it.",
-    date: "2023-07-10",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    avatar: "https://i.pravatar.cc/150?img=2",
-    rating: 5,
-    text: "Absolutely amazing! Exceeded my expectations.",
-    date: "2023-07-09",
-  },
-];
-
-const ProductReviews = ({ productId = "668ae1e8807f117cb412166a" }) => {
-  const [reviewText, setReviewText] = useState("");
-  const [reviewRating, setReviewRating] = useState(0);
-  const [reviews, setReviews] = useState([]);
-  const [isAllowed, setisAllowed] = useState(false);
+const ProductsPage = () => {
+  const dispatch = useDispatch();
+  const [currentPage, setCurrentPage] = useState(1);
+  const {
+    byPage,
+    status,
+    totalProducts = 30,
+  } = useSelector((state) => state.product);
+  const productsPerPage = 10;
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const allow = await isUserAllowed(productId);
-      setisAllowed(allow);
-      const review = await getReviews(productId);
-      console.log(review);
-      setReviews(review);
-    };
-    fetchData();
-  }, [productId]);
-
-  const handleSubmitReview = () => {
-    if (reviewText.trim() && reviewRating > 0) {
-      const newReview = {
-        rating: reviewRating,
-        text: reviewText,
-        product: productId,
-      };
-      submitReview(newReview)
-        .then(() => notify("Review Posted Successfully"))
-        .catch((err) => notify(err.message, "error"));
-      setReviewText("");
-      setReviewRating(0);
+    if (!byPage[currentPage]) {
+      setLoading(true);
+      dispatch(
+        fetchProducts({ page: currentPage, limit: productsPerPage })
+      ).then(() => {
+        setLoading(false);
+      });
+    } else {
+      setProducts(byPage[currentPage]);
     }
+  }, [status, dispatch, byPage, currentPage, productsPerPage]);
+
+  const handlePageChange = (event, page) => {
+    window.scroll(0, 0);
+    setCurrentPage(page);
   };
 
   return (
-    <ReviewSection>
-      <Typography variant="h4" gutterBottom>
-        Product Reviews
-      </Typography>
-      {isAllowed && (
-        <ReviewForm>
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            variant="outlined"
-            placeholder="Write your review here..."
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
-          <Stack
-            direction="row"
-            spacing={2}
-            alignItems="center"
-            sx={{ marginBottom: 2 }}
-          >
-            <Typography component="legend">Your Rating:</Typography>
-            <Rating
-              name="review-rating"
-              value={reviewRating}
-              onChange={(event, newValue) => {
-                setReviewRating(newValue);
-              }}
-            />
-          </Stack>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmitReview}
-            disabled={!reviewText.trim() || reviewRating === 0}
-          >
-            Submit Review
-          </Button>
-        </ReviewForm>
+    <Container className="mt-5 default-height">
+      <Row className="align-items-center justify-content-between mb-5">
+        <Col xs="auto">
+          <div>
+            Showing {products.length} of {totalProducts} results
+          </div>
+        </Col>
+        <Col xs="auto">
+          <Sidebar pageHandler={setCurrentPage} />
+        </Col>
+      </Row>
+      {loading && (
+        <>
+          <Row className="justify-content-center">
+            <SkeletonLoading />
+          </Row>
+        </>
       )}
-      <Divider sx={{ marginBottom: 4 }} />
-      <ReviewList>
-        {reviews.map((review) => (
-          <ReviewCard key={review._id}>
-            <CardContent>
-              <Stack
-                direction="row"
-                spacing={2}
-                alignItems="center"
-                sx={{ marginBottom: 2 }}
-              >
-                <Avatar
-                  src={base64ToImageUrl(review.user.photo)}
-                  alt={review.user.name}
-                />
-                <Typography variant="h6">{review.user.name}</Typography>
-              </Stack>
-              <Rating value={review.rating} readOnly sx={{ marginBottom: 1 }} />
-              <Typography variant="body1" paragraph>
-                {review.review}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Posted on {review.reviewDate.toLocaleString()}
-              </Typography>
-            </CardContent>
-          </ReviewCard>
-        ))}
-      </ReviewList>
-    </ReviewSection>
+
+      <Row className="my-5">
+        {!loading &&
+          products.map((product, i) => (
+            <ProductCard key={i} product={product} />
+          ))}
+      </Row>
+
+      <Row className="justify-content-center">
+        <Col xs="auto">
+          <Pagination
+            count={Math.ceil(totalProducts / productsPerPage)}
+            color="primary"
+            size="large"
+            onChange={handlePageChange}
+          />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
-export default ProductReviews;
+export default ProductsPage;

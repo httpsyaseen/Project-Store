@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { cartActions } from "../../features/cartSlice";
 import base64ToImageUrl from "../../utils/imageConverter";
 ///////////////
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -62,7 +62,6 @@ const ProductCard = ({ product }) => {
       theme: "light",
     });
 
-    // dispatch(cartActions.clearCart());
     dispatch(
       cartActions.addItemToCart({
         id: product._id,
@@ -73,6 +72,18 @@ const ProductCard = ({ product }) => {
     );
   };
 
+  const buyNowHandler = () => {
+    dispatch(
+      cartActions.addItemToCart({
+        id: product._id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+      })
+    );
+
+    navigate("/cart");
+  };
   return (
     <Col md={4} lg={3} className="mt-5">
       <StyledCard className="shadow-lg">
@@ -139,15 +150,25 @@ const ProductCard = ({ product }) => {
               />
             )}
           </CardContent>
-          <Button
-            variant="contained"
-            startIcon={<ShoppingCartIcon />}
-            fullWidth
-            onClick={addToCartHandler}
-            sx={{ mt: "auto" }}
-          >
-            Add to Cart
-          </Button>
+          <Box sx={{}}>
+            <Button
+              variant="contained"
+              startIcon={<ShoppingCartIcon />}
+              fullWidth
+              onClick={addToCartHandler}
+              sx={{ mt: "auto" }}
+            >
+              Add to Cart
+            </Button>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={buyNowHandler}
+              sx={{ mt: 2 }}
+            >
+              Buy Now
+            </Button>
+          </Box>
         </ContentBox>
       </StyledCard>
     </Col>

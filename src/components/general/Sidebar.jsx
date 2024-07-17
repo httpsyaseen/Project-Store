@@ -19,11 +19,13 @@ const Sidebar = ({ pageHandler }) => {
 
   useEffect(function () {
     async function fetchCategories() {
-      const res = await axios.get(`${baseURL}products/categories`);
-      setCategories(res.data.categories);
+      const res = await axios.get(`${baseURL}api/v1/products/categories`);
+      setCategories(res.data?.categories);
     }
     fetchCategories();
   }, []);
+
+  console.log(categories);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);

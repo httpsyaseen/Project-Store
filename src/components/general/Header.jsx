@@ -63,7 +63,7 @@ function NavigationBar() {
             <LinkContainer to={"/"}>
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
-            <LinkContainer to={"/"}>
+            <LinkContainer to={"/products"}>
               <Nav.Link>Products</Nav.Link>
             </LinkContainer>
             <LinkContainer to={"/"}>
@@ -79,21 +79,21 @@ function NavigationBar() {
               className="d-md-none"
             >
               <LinkContainer to={"/products"}>
-                <NavDropdown.Item>Greeting Cards</NavDropdown.Item>
+                <NavDropdown.Item>Home Accessories</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to={"/products"}>
+                <NavDropdown.Item href="/products">Clothes</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to={"/products"}>
+                <NavDropdown.Item href="/products">FootWear</NavDropdown.Item>
               </LinkContainer>
               <LinkContainer to={"/products"}>
                 <NavDropdown.Item href="/products">
-                  Home Decors
+                  Cooking Items
                 </NavDropdown.Item>
               </LinkContainer>
               <LinkContainer to={"/products"}>
-                <NavDropdown.Item href="/products">Eidi Cards</NavDropdown.Item>
-              </LinkContainer>
-              <LinkContainer to={"/products"}>
-                <NavDropdown.Item href="/products">Stickers</NavDropdown.Item>
-              </LinkContainer>
-              <LinkContainer to={"/products"}>
-                <NavDropdown.Item href="/products">Envelop</NavDropdown.Item>
+                <NavDropdown.Item href="/products">Gadgets</NavDropdown.Item>
               </LinkContainer>
             </NavDropdown>
           </Nav>
@@ -192,31 +192,31 @@ function Categories() {
             to={"/products"}
             className="category-item p-4 text-decoration-none m-2 fw-medium"
           >
-            Greeting Cards
+            Home Accessories
           </Link>
           <a
             href="/products"
             className="category-item p-4 text-decoration-none m-2 fw-medium"
           >
-            Home Decors
+            Clothes
           </a>
           <a
             href="/products"
             className="category-item p-4 text-decoration-none m-2 fw-medium"
           >
-            Eidi Cards
+            FootWear
           </a>
           <a
             href="/products"
             className="category-item p-4 text-decoration-none m-2 fw-medium"
           >
-            Stickers
+            Cooking Items
           </a>
           <a
             href="/products"
             className="category-item p-4 text-decoration-none m-2 fw-medium"
           >
-            Envelop
+            Gadgets
           </a>
         </Col>
       </Row>

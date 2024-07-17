@@ -54,13 +54,9 @@ export const isUserAllowed = async (productId) => {
 };
 
 export const getReviews = async (productId) => {
-  try {
-    const url = `${baseURL}api/v1/reviews/${productId}`;
-    const { data } = await axios.get(url);
-    return data.reviews;
-  } catch (err) {
-    return err.message;
-  }
+  const url = `${baseURL}api/v1/reviews/${productId}`;
+  const { data } = await axios.get(url);
+  return data?.reviews || [];
 };
 
 export const submitReview = async (data) => {
@@ -90,4 +86,9 @@ export const getProductDetails = async (id) => {
   const url = `${baseURL}api/v1/products/${id}`;
   const res = await axios.get(url);
   return res.data?.product;
+};
+
+export const getAllProducts = async () => {
+  const res = await axios.get(`${baseURL}api/v1/products`);
+  return res.data.products || [];
 };

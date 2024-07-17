@@ -37,43 +37,29 @@ const ReviewCard = styled(Card)(({ theme }) => ({
   backgroundColor: "#fff",
 }));
 
-const fakeReviews = [
-  {
-    id: 1,
-    name: "John Doe",
-    avatar: "https://i.pravatar.cc/150?img=1",
-    rating: 4,
-    text: "Great product! I really enjoyed using it.",
-    date: "2023-07-10",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    avatar: "https://i.pravatar.cc/150?img=2",
-    rating: 5,
-    text: "Absolutely amazing! Exceeded my expectations.",
-    date: "2023-07-09",
-  },
-];
-
-const ProductReviews = ({ productId = "668ae1e8807f117cb412166a" }) => {
+const ProductReviews = ({ productId }) => {
   const [reviewText, setReviewText] = useState("");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [isAllowed, setisAllowed] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [loading, setLoading] = useState(false);
+  console.log(reviews);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const allow = await isUserAllowed(productId);
       setisAllowed(allow);
       const review = await getReviews(productId);
       setReviews(review);
+      setLoading(false);
     };
     fetchData();
   }, [productId, refreshTrigger]);
 
   const handleSubmitReview = () => {
+    setLoading(true);
     if (reviewText.trim() && reviewRating > 0) {
       const newReview = {
         rating: reviewRating,
@@ -86,8 +72,13 @@ const ProductReviews = ({ productId = "668ae1e8807f117cb412166a" }) => {
           setReviewText("");
           setReviewRating(0);
           setRefreshTrigger((c) => c + 1);
+          setLoading(false);
+          setisAllowed(false);
         })
-        .catch((err) => notify("Error Posting Review", "error"));
+        .catch((err) => {
+          setLoading(false);
+          notify("Error Posting Review", "error");
+        });
     }
   };
 
@@ -127,15 +118,15 @@ const ProductReviews = ({ productId = "668ae1e8807f117cb412166a" }) => {
             variant="contained"
             color="primary"
             onClick={handleSubmitReview}
-            disabled={!reviewText.trim() || reviewRating === 0}
+            disabled={!reviewText.trim() || reviewRating === 0 || loading}
           >
-            Submit Review
+            {!loading ? "Submit" : "Submitting"} Review
           </Button>
         </ReviewForm>
       )}
       <Divider sx={{ marginBottom: 4 }} />
       <ReviewList>
-        {reviews.length === 0 && (
+        {!loading && reviews.length === 0 && (
           <>
             <Box
               sx={{
